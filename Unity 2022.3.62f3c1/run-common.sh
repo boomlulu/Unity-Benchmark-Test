@@ -12,24 +12,50 @@ TIMEOUT_SECS="${TIMEOUT_SECS:-1800}"
 
 mkdir -p "$RESULTS"
 
-# Portable timeout: this env has no `timeout`/`gtimeout` binary.
-# perl alarm + exec gives a reliable SIGALRM-based timeout (exit 142 on timeout).
-run_with_timeout() {
-  local secs="$1"; shift
-  perl -e 'alarm shift; exec @ARGV' "$secs" "$@"
+# Kill a process tree: children first, then the process itself.
+# TERM with a short grace window, then KILL anything still alive.
+# Used to reap Unity once results are on disk (it would otherwise hang in teardown).
+kill_tree() {
+  local pid="$1"
+  pkill -TERM -P "$pid" 2>/dev/null   # children of Unity
+  kill -TERM "$pid"     2>/dev/null   # Unity itself
+  # grace: poll up to 5s for a clean exit
+  local g=0
+  while [ "$g" -lt 5 ] && kill -0 "$pid" 2>/dev/null; do
+    sleep 1
+    g=$((g + 1))
+  done
+  # still alive -> hard kill
+  if kill -0 "$pid" 2>/dev/null; then
+    pkill -KILL -P "$pid" 2>/dev/null
+    kill -KILL "$pid"     2>/dev/null
+  fi
 }
 
 # Run one Unity test category headless. $1=category $2=label (used for output files).
-# Exit code from Unity is unreliable (teardown hang) -> caller inspects the XML.
+#
+# Unity 2022.3 on Apple Silicon writes the result XML + perf json, then hangs in
+# teardown for ~13min before exiting. Waiting for the process is pointless: the
+# data we need is already on disk. So we launch Unity in the BACKGROUND, poll for
+# the XML, and KILL Unity the moment the XML is complete (</test-run>). Killing at
+# this point is safe -- Stage-1 proved the files are flushed before the hang.
+#
+# Exit code from Unity is unreliable (we kill it / it hangs) -> verdict comes from
+# the XML, never from $?. TIMEOUT_SECS is only a safety backstop; the normal path
+# kills Unity within a few minutes.
 run_category() {
   local category="$1"
   local label="${2:-$category}"
   local xml="$RESULTS/$label.xml"
   local log="$RESULTS/$label.log"
 
-  rm -f "$PERF_JSON"      # ensure we copy back THIS run's json, not a stale one
-  echo ">>> Running category '$category' (timeout ${TIMEOUT_SECS}s)"
-  run_with_timeout "$TIMEOUT_SECS" "$UNITY" \
+  # ensure we never read THIS run's verdict/perf from a stale file
+  rm -f "$xml" "$PERF_JSON" "$RESULTS/${label}.perf.json"
+
+  echo ">>> Running category '$category' (XML-complete kill; safety timeout ${TIMEOUT_SECS}s)"
+
+  # launch Unity in the background; same args as before
+  "$UNITY" \
     -runTests \
     -batchmode \
     -nographics \
@@ -37,9 +63,43 @@ run_category() {
     -testPlatform EditMode \
     -testCategory "$category" \
     -testResults "$xml" \
-    -logFile "$log"
-  local code=$?
-  echo "    Unity exit code: $code (ignored; verdict from XML)"
+    -logFile "$log" &
+  local upid=$!
+
+  local interval=3
+  local elapsed=0
+  local done=0
+  while [ "$elapsed" -lt "$TIMEOUT_SECS" ]; do
+    # Unity exited on its own (rare on Apple Silicon) -> nothing left to do
+    if ! kill -0 "$upid" 2>/dev/null; then
+      echo "    Unity exited on its own after ~${elapsed}s"
+      done=1
+      break
+    fi
+    # XML complete -> results are on disk; kill Unity to skip the teardown hang
+    if [ -f "$xml" ] && grep -q '</test-run>' "$xml" 2>/dev/null; then
+      echo "    XML done after ~${elapsed}s, killing Unity"
+      # small grace for the perf json to flush (<=10s)
+      local g=0
+      while [ ! -f "$PERF_JSON" ] && [ "$g" -lt 10 ]; do
+        sleep 1
+        g=$((g + 1))
+      done
+      kill_tree "$upid"
+      done=1
+      break
+    fi
+    sleep "$interval"
+    elapsed=$((elapsed + interval))
+  done
+
+  # safety backstop: XML never completed within TIMEOUT_SECS
+  if [ "$done" -eq 0 ]; then
+    echo "    SAFETY TIMEOUT after ${TIMEOUT_SECS}s, killing Unity"
+    kill_tree "$upid"
+  fi
+
+  wait "$upid" 2>/dev/null   # reap the (now dead) background process
 
   # copy perf json back from persistentDataPath
   if [ -f "$PERF_JSON" ]; then
