@@ -3,6 +3,7 @@
 compare.py — diff two archived CollectionBenchmark snapshots.
 
     python3 compare.py <A> <B> [--metric time|gc|both] [--threshold 10] [--top 30]
+                       [--md PATH]
 
 A and B are either entry names under benchmarks/history/ (e.g.
 "20260603-0312__7a30802__baseline") or direct paths to such a directory.
@@ -28,6 +29,12 @@ Keys present on only one side are reported as added (B-only) / removed (A-only).
 
 Exit code: non-zero when at least one regression beyond threshold exists (so the
 script can gate CI); zero otherwise. stdlib only (csv/json/argparse).
+
+--md PATH writes the full comparison as a Markdown report to PATH (header from
+both meta.json, summary counts table, top-regression / top-improvement tables,
+and added/removed key lists). Without --md the original stdout report is
+unchanged; with --md stdout prints a brief summary instead. The exit-code
+semantics are identical in both modes.
 """
 
 import argparse
@@ -242,6 +249,94 @@ def hdr_line(tag, d, meta):
                meta.get("total", "-")))
 
 
+# ---------------------------------------------------------------------------
+# Markdown emitter. Consumes the SAME diff records produced by build_diffs();
+# it does not re-run any comparison. Each regression/improvement record has the
+# shape {key, metric, a, b, delta, pct}.
+# ---------------------------------------------------------------------------
+
+def md_escape(s):
+    """Escape '|' and backslashes so a cell can't break the table layout."""
+    return str(s).replace("\\", "\\\\").replace("|", "\\|")
+
+
+def md_hdr_row(tag, d, meta):
+    return ("| %s | %s | %s | %s | %s | %s/%s |"
+            % (tag,
+               md_escape(os.path.basename(os.path.normpath(d))),
+               md_escape(meta.get("label") or "-"),
+               md_escape(meta.get("git_sha") or "-"),
+               md_escape(meta.get("unity_version") or "-"),
+               md_escape(meta.get("passed", "-")),
+               md_escape(meta.get("total", "-"))))
+
+
+def md_diff_table(lines, title, recs, top):
+    lines.append("")
+    lines.append("### %s" % title)
+    lines.append("")
+    if not recs:
+        lines.append("_(none)_")
+        return
+    lines.append("| family | collection | op | elem | N | A | B | Δ | Δ% | metric |")
+    lines.append("|---|---|---|---|---|---:|---:|---:|---:|---|")
+    for rec in recs[:top]:
+        fam, coll, op, elem, n = rec["key"]
+        lines.append("| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |" % (
+            md_escape(fam), md_escape(coll), md_escape(op),
+            md_escape(elem), md_escape(n),
+            fmt_val(rec["a"]), fmt_val(rec["b"]),
+            fmt_val(rec["delta"]), fmt_pct(rec["pct"]),
+            metric_label(rec["metric"]),
+        ))
+    if len(recs) > top:
+        lines.append("")
+        lines.append("_... %d more_" % (len(recs) - top))
+
+
+def md_key_list(lines, title, keys, sign, top):
+    if not keys:
+        return
+    lines.append("")
+    lines.append("### %s: %d" % (title, len(keys)))
+    lines.append("")
+    for k in sorted(keys)[:top]:
+        lines.append("- `%s %s`" % (sign, key_str(k)))
+    if len(keys) > top:
+        lines.append("")
+        lines.append("_... %d more_" % (len(keys) - top))
+
+
+def render_md(dirA, dirB, metaA, metaB, A, B,
+              metric, threshold, regressions, improvements,
+              counts, added, removed, top):
+    lines = []
+    lines.append("# CollectionBenchmark comparison: A (baseline) vs B (candidate)")
+    lines.append("")
+    lines.append("| side | snapshot | label | sha | unity | passed |")
+    lines.append("|---|---|---|---|---|---|")
+    lines.append(md_hdr_row("A (baseline)", dirA, metaA))
+    lines.append(md_hdr_row("B (candidate)", dirB, metaB))
+    lines.append("")
+    lines.append("metric=`%s`  threshold=`%.1f%%`  keys: A=%d B=%d shared=%d"
+                 % (metric, threshold, len(A), len(B), len(set(A) & set(B))))
+    lines.append("")
+    lines.append("## Summary")
+    lines.append("")
+    lines.append("| improved | regressed | unchanged | added | removed |")
+    lines.append("|---:|---:|---:|---:|---:|")
+    lines.append("| %d | %d | %d | %d | %d |"
+                 % (counts["improved"], counts["regressed"], counts["unchanged"],
+                    counts["added"], counts["removed"]))
+    lines.append("")
+    lines.append("## Detail")
+    md_diff_table(lines, "Top regressions (B worse than A)", regressions, top)
+    md_diff_table(lines, "Top improvements (B better than A)", improvements, top)
+    md_key_list(lines, "Added (B-only keys)", added, "+", top)
+    md_key_list(lines, "Removed (A-only keys)", removed, "-", top)
+    return "\n".join(lines) + "\n"
+
+
 def main():
     ap = argparse.ArgumentParser(
         description="Compare two archived CollectionBenchmark snapshots (A=before, B=after).")
@@ -252,6 +347,9 @@ def main():
                     help="percent worse/better to count as regression/improvement (default 10)")
     ap.add_argument("--top", type=int, default=30,
                     help="max rows per table (default 30)")
+    ap.add_argument("--md", metavar="PATH", default=None,
+                    help="write the full comparison as Markdown to PATH "
+                         "(stdout then prints only a brief summary)")
     args = ap.parse_args()
 
     dirA = resolve_dir(args.A)
@@ -263,6 +361,23 @@ def main():
 
     regressions, improvements, counts, added, removed = build_diffs(
         A, B, args.metric, args.threshold)
+
+    if args.md:
+        md = render_md(dirA, dirB, metaA, metaB, A, B,
+                       args.metric, args.threshold,
+                       regressions, improvements, counts, added, removed,
+                       args.top)
+        with open(args.md, "w") as f:
+            f.write(md)
+        # brief summary to stdout; full report lives in the .md file.
+        print("wrote markdown report -> %s" % args.md)
+        print("metric=%s  threshold=%.1f%%  keys: A=%d B=%d shared=%d"
+              % (args.metric, args.threshold, len(A), len(B),
+                 len(set(A) & set(B))))
+        print("summary: improved=%d regressed=%d unchanged=%d added=%d removed=%d"
+              % (counts["improved"], counts["regressed"], counts["unchanged"],
+                 counts["added"], counts["removed"]))
+        sys.exit(1 if counts["regressed"] > 0 else 0)
 
     print(hdr_line("A (baseline) ", dirA, metaA))
     print(hdr_line("B (candidate)", dirB, metaB))
