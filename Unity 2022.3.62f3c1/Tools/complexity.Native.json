@@ -1,0 +1,28 @@
+{
+  "_comment": "Static Big-O reference for the Native family (Unity.Collections 2.1.4). Schema matches complexity.json: keyed by <Collection>_<Op>, time/space, amortized/avg where relevant. Native containers live on the UNMANAGED (native) heap, not the GC heap, so the 'space' here is native allocation; managed GC Allocated is ~0 for every op (the headline). 'this[k]' / TryGetValue / Contains on the hash containers are open-addressing avg-O(1). Build (增) ops capacity is pre-sized to N so growth is amortized away.",
+  "NativeArray_Set":        { "time": "O(1)",           "space": "O(1) (native; managed GC ~0)" },
+  "NativeArray_Get":        { "time": "O(1)",           "space": "O(1) (native; managed GC ~0)" },
+  "NativeArray_Iterate":    { "time": "O(n)",           "space": "O(1) (native; managed GC ~0)" },
+
+  "NativeList_Add":         { "time": "O(1) amortized", "space": "O(n) native buffer (managed GC ~0)" },
+  "NativeList_Remove":      { "time": "O(1) per RemoveAtSwapBack, O(n) to drain all", "space": "O(1) (native; managed GC ~0)" },
+  "NativeList_Set":         { "time": "O(1)",           "space": "O(1) (native; managed GC ~0)" },
+  "NativeList_Get":         { "time": "O(1)",           "space": "O(1) (native; managed GC ~0)" },
+  "NativeList_Contains":    { "time": "O(n)",           "space": "O(1) (native linear scan; managed GC ~0)" },
+  "NativeList_Iterate":     { "time": "O(n)",           "space": "O(1) (native; managed GC ~0)" },
+
+  "NativeHashMap_Add":      { "time": "O(1) avg amortized", "space": "O(n) native (managed GC ~0)" },
+  "NativeHashMap_Remove":   { "time": "O(1) avg",       "space": "O(1) (native; managed GC ~0)" },
+  "NativeHashMap_Set":      { "time": "O(1) avg",       "space": "O(1) (native; managed GC ~0)" },
+  "NativeHashMap_Get":      { "time": "O(1) avg",       "space": "O(1) (native; TryGetValue; managed GC ~0)" },
+  "NativeHashMap_Iterate":  { "time": "O(n)",           "space": "O(1) (native struct enumerator; managed GC ~0)" },
+
+  "NativeHashSet_Add":      { "time": "O(1) avg amortized", "space": "O(n) native (managed GC ~0)" },
+  "NativeHashSet_Remove":   { "time": "O(1) avg",       "space": "O(1) (native; managed GC ~0)" },
+  "NativeHashSet_Contains": { "time": "O(1) avg",       "space": "O(1) (native; managed GC ~0)" },
+  "NativeHashSet_Iterate":  { "time": "O(n)",           "space": "O(1) (native struct enumerator; managed GC ~0)" },
+
+  "NativeQueue_Add":        { "time": "O(1) amortized", "space": "O(n) native blocks (managed GC ~0)" },
+  "NativeQueue_Remove":     { "time": "O(1) per Dequeue, O(n) to drain all", "space": "O(1) (native; managed GC ~0)" },
+  "NativeQueue_Iterate":    { "time": "O(n)",           "space": "O(n) TEMP native array (Allocator.Temp, disposed in-op; managed GC ~0)" }
+}

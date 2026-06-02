@@ -1,0 +1,15 @@
+{
+  "_comment": "Static Big-O reference (SPEC §3/§5). Keyed by <Collection>_<Op>. amortized/avg where relevant. Stage-2 extends this.",
+  "List_Add":                 { "time": "O(1) amortized", "space": "O(1) amortized" },
+  "List_Contains":            { "time": "O(n)",           "space": "O(1)" },
+  "List_Iterate":             { "time": "O(n)",           "space": "O(1)" },
+  "Dictionary_Get":           { "time": "O(1) avg",       "space": "O(1)" },
+  "ArrayList_Add":            { "time": "O(1) amortized", "space": "O(1) (boxed elem heap)" },
+  "ConcurrentDictionary_Add": { "time": "O(1) avg",       "space": "O(1)" },
+  "ObservableCollection_Add": { "time": "O(1) amortized", "space": "O(1)" },
+  "ImmutableList_BuilderAdd": { "time": "O(n log n) build", "space": "O(n)" },
+  "ImmutableList_AddOne":     { "time": "O(log n)",       "space": "O(log n) (structural share)" },
+  "NativeArray_Set":          { "time": "O(1)",           "space": "O(1)" },
+  "NativeArray_Get":          { "time": "O(1)",           "space": "O(1)" },
+  "NativeArray_Iterate":      { "time": "O(n)",           "space": "O(1)" }
+}

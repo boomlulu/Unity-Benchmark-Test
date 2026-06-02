@@ -1,0 +1,28 @@
+{
+  "_comment": "Static Big-O reference for ObjectModel family (SPEC §3/§5.D). Keyed by <Collection>_<Op>. amortized/avg where relevant. Mirrors schema of complexity.json.",
+
+  "Collection_Add":                  { "time": "O(1) amortized",  "space": "O(1) amortized (backing List growth)" },
+  "Collection_InsertHead":           { "time": "O(n) per insert", "space": "O(1) amortized" },
+  "Collection_RemoveAt":             { "time": "O(1) at tail",    "space": "O(1)" },
+  "Collection_Set":                  { "time": "O(1)",            "space": "O(1)" },
+  "Collection_Get":                  { "time": "O(1) index + O(n) Contains", "space": "O(1)" },
+  "Collection_Iterate":              { "time": "O(n)",            "space": "O(1)" },
+
+  "ObservableCollection_Add":        { "time": "O(1) amortized (+ notify)",  "space": "O(1) amortized (+ EventArgs per Add)" },
+  "ObservableCollection_InsertHead": { "time": "O(n) per insert (+ notify)", "space": "O(1) amortized (+ EventArgs per insert)" },
+  "ObservableCollection_RemoveAt":   { "time": "O(1) at tail (+ notify)",    "space": "O(1) (+ EventArgs per remove)" },
+  "ObservableCollection_Set":        { "time": "O(1) (+ notify)",            "space": "O(1) (+ EventArgs per set)" },
+  "ObservableCollection_Get":        { "time": "O(1) index + O(n) Contains", "space": "O(1)" },
+  "ObservableCollection_Iterate":    { "time": "O(n)",            "space": "O(1)" },
+
+  "ReadOnlyCollection_Get":          { "time": "O(1) index + O(n) Contains", "space": "O(1)" },
+  "ReadOnlyCollection_Iterate":      { "time": "O(n)",            "space": "O(1)" },
+
+  "ReadOnlyDictionary_Get":          { "time": "O(1) avg",        "space": "O(1)" },
+  "ReadOnlyDictionary_Iterate":      { "time": "O(n)",            "space": "O(1)" },
+
+  "KeyedCollection_Add":             { "time": "O(1) avg amortized", "space": "O(1) amortized (List + key Dictionary)" },
+  "KeyedCollection_Remove":          { "time": "O(n) (dict lookup O(1) + List shift O(n))", "space": "O(1)" },
+  "KeyedCollection_Get":             { "time": "O(1) avg (this[key] + Contains(key))",      "space": "O(1)" },
+  "KeyedCollection_Iterate":         { "time": "O(n)",            "space": "O(1)" }
+}

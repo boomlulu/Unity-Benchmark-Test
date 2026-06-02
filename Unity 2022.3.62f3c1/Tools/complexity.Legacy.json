@@ -1,0 +1,37 @@
+{
+  "_comment": "Static Big-O reference for the Legacy non-generic family (SPEC §3/§5.B). Keyed by <Collection>_<Op>, matching gen_report.py name parsing. amortized/avg where relevant. SPACE notes call out BOXING heap overhead: every value-type element (int/ValStruct) AND every int key stored in these object-typed containers is boxed into a separate heap object (~object header + payload), so a build of N value elems carries ~N boxed-object allocations ON TOP OF the backing-array growth. RefElem is already a reference -> no boxing.",
+
+  "ArrayList_Add":           { "time": "O(1) amortized",  "space": "O(1) amortized array growth + 1 boxed heap obj per value elem (int/val); ref = no box" },
+  "ArrayList_Insert0":       { "time": "O(n) per insert (O(n^2) build)", "space": "O(1) array growth amortized + 1 boxed heap obj per value elem; head shift moves refs, no extra alloc" },
+  "ArrayList_RemoveAt":      { "time": "O(1) tail remove (O(n) drain)",  "space": "O(1) (no alloc; boxed objs become garbage as removed)" },
+  "ArrayList_Set":           { "time": "O(1)",            "space": "O(1) per write, but +1 NEW boxed heap obj per value-elem assignment (int/val); ref = no box" },
+  "ArrayList_Index":         { "time": "O(1)",            "space": "O(1) (returns stored boxed reference; no new box on read)" },
+  "ArrayList_Contains":      { "time": "O(n)",            "space": "O(1) (linear scan; probe value boxed once per call for int/val)" },
+  "ArrayList_Iterate":       { "time": "O(n)",            "space": "O(1) (enumerator yields stored object refs; no per-elem box)" },
+
+  "Hashtable_Add":           { "time": "O(1) avg",        "space": "O(1) avg bucket growth + boxed int KEY heap obj per entry + boxed value heap obj for int/val (ref value = no box)" },
+  "Hashtable_Remove":        { "time": "O(1) avg",        "space": "O(1) (key probe boxed once per call; entry objs become garbage)" },
+  "Hashtable_Set":           { "time": "O(1) avg",        "space": "O(1), but key probe boxed + NEW boxed value heap obj per value-elem write (int/val); ref = no value box" },
+  "Hashtable_Get":           { "time": "O(1) avg",        "space": "O(1) (int key boxed once per ContainsKey/indexer lookup; value returned as stored ref, no new box)" },
+  "Hashtable_Iterate":       { "time": "O(n)",            "space": "O(1) (foreach DictionaryEntry: entry struct boxed per step by the non-generic enumerator)" },
+
+  "Queue_Enqueue":           { "time": "O(1) amortized",  "space": "O(1) amortized ring-buffer growth + 1 boxed heap obj per value elem (int/val); ref = no box" },
+  "Queue_Dequeue":           { "time": "O(1)",            "space": "O(1) (no alloc; boxed objs become garbage as dequeued)" },
+  "Queue_Peek":              { "time": "O(1) peek + O(n) Contains", "space": "O(1) (linear Contains; probe boxed once per call for int/val)" },
+  "Queue_Iterate":           { "time": "O(n)",            "space": "O(1) (enumerator yields stored object refs; no per-elem box)" },
+
+  "Stack_Push":              { "time": "O(1) amortized",  "space": "O(1) amortized array growth + 1 boxed heap obj per value elem (int/val); ref = no box" },
+  "Stack_Pop":               { "time": "O(1)",            "space": "O(1) (no alloc; boxed objs become garbage as popped)" },
+  "Stack_Peek":              { "time": "O(1) peek + O(n) Contains", "space": "O(1) (linear Contains; probe boxed once per call for int/val)" },
+  "Stack_Iterate":           { "time": "O(n)",            "space": "O(1) (enumerator yields stored object refs; no per-elem box)" },
+
+  "SortedList_Add":          { "time": "O(log n) search + O(n) shift; ascending keys -> O(1) amortized tail append (O(n) build)", "space": "O(1) amortized key/value array growth + boxed int KEY heap obj per entry + boxed value heap obj for int/val (ref value = no box)" },
+  "SortedList_Remove":       { "time": "O(log n) search + O(n) shift", "space": "O(1) (key probe boxed once per call; entry objs become garbage)" },
+  "SortedList_Set":          { "time": "O(log n)",        "space": "O(1), but key probe boxed + NEW boxed value heap obj per value-elem write (int/val); ref = no value box" },
+  "SortedList_ContainsKey":  { "time": "O(log n) binary search", "space": "O(1) (int key boxed once per lookup)" },
+  "SortedList_Iterate":      { "time": "O(n)",            "space": "O(1) (foreach DictionaryEntry: entry struct boxed per step by the non-generic enumerator)" },
+
+  "BitArray_Set":            { "time": "O(1)",            "space": "O(1) (packed 32 bits/int; pure bit write, NO boxing)" },
+  "BitArray_Get":            { "time": "O(1)",            "space": "O(1) (pure bit read, NO boxing; bool returned by value)" },
+  "BitArray_Iterate":        { "time": "O(n)",            "space": "O(1) live, but non-generic enumerator boxes each bool per step" }
+}

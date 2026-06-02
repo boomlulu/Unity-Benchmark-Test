@@ -1,0 +1,55 @@
+{
+  "_comment": "Static Big-O reference for the Immutable family (SPEC §5.E). Schema matches complexity.json: keyed by <Collection>_<Op>, {time, space}. ALL of 增(Build/AddOne)/删(Remove/RemoveAt/Drain)/改(SetItem) RETURN A NEW INSTANCE (persistent/path-copy) -> space column = bytes allocated for the new instance's changed structure. space note documents path-copy / persistent structural-sharing cost. GC FLOOR CAVEAT: build & single path-copy ops are the GC-heaviest of this family but GetTotalMemory under-resolves their scattered transient allocations in this Mono; a measured 0 means 'below floor', not zero — these space columns are the ground truth.",
+
+  "ImmutableArray_Build":              { "time": "O(n)",            "space": "O(n) (one contiguous T[]; builder doubles then ToImmutable steals/copies)" },
+  "ImmutableArray_AddOne":             { "time": "O(n)",            "space": "O(n) (full array copy: NOT structural-sharing — flat array)" },
+  "ImmutableArray_RemoveAt":           { "time": "O(n)",            "space": "O(n) (full array copy minus 1 slot)" },
+  "ImmutableArray_SetItem":            { "time": "O(n)",            "space": "O(n) (full array copy with 1 slot changed)" },
+  "ImmutableArray_Index":              { "time": "O(1)",            "space": "O(1) (direct array index)" },
+  "ImmutableArray_Contains":           { "time": "O(n)",            "space": "O(1) (linear scan)" },
+  "ImmutableArray_Iterate":            { "time": "O(n)",            "space": "O(1) (struct enumerator, no alloc)" },
+
+  "ImmutableList_Build":               { "time": "O(n log n) build", "space": "O(n) (AVL tree of ~n nodes; builder mutates in place then freezes)" },
+  "ImmutableList_AddOne":              { "time": "O(log n)",        "space": "O(log n) (path-copy: only the root-to-leaf spine is cloned, rest shared)" },
+  "ImmutableList_Remove":              { "time": "O(n)",            "space": "O(log n) (O(n) to locate by value via scan + O(log n) path-copy to rebalance)" },
+  "ImmutableList_SetItem":             { "time": "O(log n)",        "space": "O(log n) (path-copy of spine to the index)" },
+  "ImmutableList_Index":               { "time": "O(log n)",        "space": "O(1) (tree descent by rank)" },
+  "ImmutableList_Contains":            { "time": "O(n)",            "space": "O(1) (in-order linear scan)" },
+  "ImmutableList_Iterate":             { "time": "O(n)",            "space": "O(1) (struct enumerator with bounded stack)" },
+
+  "ImmutableDictionary_Build":         { "time": "O(n) avg",        "space": "O(n) (hash bucket AVL trees; builder mutates then freezes)" },
+  "ImmutableDictionary_SetItemOne":    { "time": "O(log n) avg",    "space": "O(log n) (path-copy of the affected bucket's spine)" },
+  "ImmutableDictionary_Remove":        { "time": "O(log n) avg",    "space": "O(log n) (path-copy to rebalance affected bucket)" },
+  "ImmutableDictionary_SetItem":       { "time": "O(log n) avg",    "space": "O(log n) (path-copy; existing-key overwrite still allocs new spine)" },
+  "ImmutableDictionary_Get":           { "time": "O(log n) avg",    "space": "O(1) (hash + tree descent)" },
+  "ImmutableDictionary_Iterate":       { "time": "O(n)",            "space": "O(1) (struct enumerator)" },
+
+  "ImmutableSortedDictionary_Build":   { "time": "O(n log n) build", "space": "O(n) (sorted AVL tree of n nodes; builder mutates then freezes)" },
+  "ImmutableSortedDictionary_SetItemOne": { "time": "O(log n)",     "space": "O(log n) (path-copy of root-to-leaf spine)" },
+  "ImmutableSortedDictionary_Remove":  { "time": "O(log n)",        "space": "O(log n) (path-copy to rebalance)" },
+  "ImmutableSortedDictionary_SetItem": { "time": "O(log n)",        "space": "O(log n) (path-copy; existing-key overwrite still allocs new spine)" },
+  "ImmutableSortedDictionary_Get":     { "time": "O(log n)",        "space": "O(1) (binary tree descent)" },
+  "ImmutableSortedDictionary_Iterate": { "time": "O(n)",            "space": "O(1) (struct enumerator)" },
+
+  "ImmutableHashSet_Build":            { "time": "O(n) avg",        "space": "O(n) (hash bucket AVL trees; builder mutates then freezes)" },
+  "ImmutableHashSet_AddOne":           { "time": "O(log n) avg",    "space": "O(log n) (path-copy of affected bucket's spine)" },
+  "ImmutableHashSet_Remove":           { "time": "O(log n) avg",    "space": "O(log n) (path-copy to rebalance affected bucket)" },
+  "ImmutableHashSet_Contains":         { "time": "O(log n) avg",    "space": "O(1) (hash + tree descent)" },
+  "ImmutableHashSet_Iterate":          { "time": "O(n)",            "space": "O(1) (struct enumerator)" },
+
+  "ImmutableSortedSet_Build":          { "time": "O(n log n) build", "space": "O(n) (sorted AVL tree of n nodes; builder mutates then freezes)" },
+  "ImmutableSortedSet_AddOne":         { "time": "O(log n)",        "space": "O(log n) (path-copy of root-to-leaf spine)" },
+  "ImmutableSortedSet_Remove":         { "time": "O(log n)",        "space": "O(log n) (path-copy to rebalance)" },
+  "ImmutableSortedSet_Contains":       { "time": "O(log n)",        "space": "O(1) (binary tree descent)" },
+  "ImmutableSortedSet_Iterate":        { "time": "O(n)",            "space": "O(1) (struct enumerator)" },
+
+  "ImmutableQueue_Build":              { "time": "O(n)",            "space": "O(n) (n Enqueue: each appends 1 node to a persistent forward stack; total n nodes)" },
+  "ImmutableQueue_Drain":              { "time": "O(n)",            "space": "O(n) (n Dequeue: forward stack reversed once O(n), then n new queue heads allocated along the chain)" },
+  "ImmutableQueue_Peek":               { "time": "O(1)",            "space": "O(1) (head of backward stack)" },
+  "ImmutableQueue_Iterate":            { "time": "O(n)",            "space": "O(1) (struct enumerator; backward then reversed-forward)" },
+
+  "ImmutableStack_Build":              { "time": "O(n)",            "space": "O(n) (n Push: each prepends 1 cons-node; O(1) per push, n nodes total, tails shared)" },
+  "ImmutableStack_Drain":              { "time": "O(n)",            "space": "O(0) measured (n Pop just walks shared tails; NO new nodes allocated — returns existing sub-stacks)" },
+  "ImmutableStack_Peek":               { "time": "O(1)",            "space": "O(1) (head cons-node)" },
+  "ImmutableStack_Iterate":            { "time": "O(n)",            "space": "O(1) (struct enumerator walking the linked nodes)" }
+}

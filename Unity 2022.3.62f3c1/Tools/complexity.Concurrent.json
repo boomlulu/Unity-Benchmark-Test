@@ -1,0 +1,27 @@
+{
+  "_comment": "Static Big-O reference for the Concurrent family (SPEC §3/§5.C). Keyed by <Collection>_<Op>, matching test method tokens (Add/Remove/Update/Get/Contains/Peek/Iterate). amortized/avg where relevant. Single-threaded structural overhead measured; lock/CAS fixed cost shows up but contention not measured. Merge into complexity.json before running gen_report.py.",
+
+  "ConcurrentDictionary_Add":      { "time": "O(1) avg amortized", "space": "O(1) amortized (bucket/node alloc)" },
+  "ConcurrentDictionary_Remove":   { "time": "O(1) avg",          "space": "O(1)" },
+  "ConcurrentDictionary_Update":   { "time": "O(1) avg",          "space": "O(1)" },
+  "ConcurrentDictionary_Get":      { "time": "O(1) avg",          "space": "O(1)" },
+  "ConcurrentDictionary_Iterate":  { "time": "O(n)",              "space": "O(1)" },
+
+  "ConcurrentQueue_Add":           { "time": "O(1) amortized",    "space": "O(1) amortized (segment alloc)" },
+  "ConcurrentQueue_Remove":        { "time": "O(1)",              "space": "O(1)" },
+  "ConcurrentQueue_Contains":      { "time": "O(n) per probe",    "space": "O(1)" },
+  "ConcurrentQueue_Iterate":       { "time": "O(n)",              "space": "O(1)" },
+
+  "ConcurrentStack_Add":           { "time": "O(1)",              "space": "O(1) (node per push)" },
+  "ConcurrentStack_Remove":        { "time": "O(1)",              "space": "O(1)" },
+  "ConcurrentStack_Peek":          { "time": "O(1)",              "space": "O(1)" },
+  "ConcurrentStack_Iterate":       { "time": "O(n)",              "space": "O(1)" },
+
+  "ConcurrentBag_Add":             { "time": "O(1) amortized",    "space": "O(1) amortized (thread-local node)" },
+  "ConcurrentBag_Remove":          { "time": "O(1) amortized",    "space": "O(1)" },
+  "ConcurrentBag_Iterate":         { "time": "O(n)",              "space": "O(n) snapshot" },
+
+  "BlockingCollection_Add":        { "time": "O(1) amortized",    "space": "O(1) amortized (backing ConcurrentQueue)" },
+  "BlockingCollection_Remove":     { "time": "O(1)",              "space": "O(1)" },
+  "BlockingCollection_Iterate":    { "time": "O(n)",              "space": "O(1)" }
+}

@@ -1,0 +1,59 @@
+{
+  "_comment": "Static Big-O reference for Generic family (SPEC §3/§5.A). Keyed by <Collection>_<Op>. amortized/avg where relevant. Schema mirrors complexity.json.",
+
+  "List_Add":                     { "time": "O(1) amortized",   "space": "O(1) amortized" },
+  "List_InsertHead":              { "time": "O(n) per insert",  "space": "O(1) amortized" },
+  "List_Remove":                  { "time": "O(1) per RemoveAt(last)", "space": "O(1)" },
+  "List_Set":                     { "time": "O(1)",             "space": "O(1)" },
+  "List_Get":                     { "time": "O(1)",             "space": "O(1)" },
+  "List_Contains":                { "time": "O(n)",             "space": "O(1)" },
+  "List_Iterate":                 { "time": "O(n)",             "space": "O(1)" },
+
+  "Dictionary_Add":               { "time": "O(1) avg amortized", "space": "O(1) amortized" },
+  "Dictionary_Remove":            { "time": "O(1) avg",         "space": "O(1)" },
+  "Dictionary_Set":               { "time": "O(1) avg",         "space": "O(1)" },
+  "Dictionary_Get":               { "time": "O(1) avg",         "space": "O(1)" },
+  "Dictionary_Iterate":           { "time": "O(n)",             "space": "O(1)" },
+
+  "HashSet_Add":                  { "time": "O(1) avg amortized", "space": "O(1) amortized" },
+  "HashSet_Remove":               { "time": "O(1) avg",         "space": "O(1)" },
+  "HashSet_Contains":             { "time": "O(1) avg",         "space": "O(1)" },
+  "HashSet_Iterate":              { "time": "O(n)",             "space": "O(1)" },
+
+  "SortedDictionary_Add":         { "time": "O(log n) per add", "space": "O(1) per node" },
+  "SortedDictionary_Remove":      { "time": "O(log n)",         "space": "O(1)" },
+  "SortedDictionary_Set":         { "time": "O(log n)",         "space": "O(1)" },
+  "SortedDictionary_Get":         { "time": "O(log n)",         "space": "O(1)" },
+  "SortedDictionary_Iterate":     { "time": "O(n)",             "space": "O(1)" },
+
+  "SortedSet_Add":                { "time": "O(log n) per add", "space": "O(1) per node" },
+  "SortedSet_Remove":             { "time": "O(log n)",         "space": "O(1)" },
+  "SortedSet_Contains":           { "time": "O(log n)",         "space": "O(1)" },
+  "SortedSet_Iterate":            { "time": "O(n)",             "space": "O(1)" },
+
+  "SortedList_Add":               { "time": "O(n) worst / O(1) amortized for ascending keys", "space": "O(1) amortized" },
+  "SortedList_Remove":            { "time": "O(n) per remove (array shift)", "space": "O(1)" },
+  "SortedList_Set":               { "time": "O(log n) existing key", "space": "O(1)" },
+  "SortedList_Get":               { "time": "O(log n) binary search", "space": "O(1)" },
+  "SortedList_Iterate":           { "time": "O(n)",             "space": "O(1)" },
+
+  "LinkedList_Add":               { "time": "O(1) per AddLast",  "space": "O(1) node alloc per add" },
+  "LinkedList_AddFirst":          { "time": "O(1) per AddFirst", "space": "O(1) node alloc per add" },
+  "LinkedList_Remove":            { "time": "O(1) per RemoveFirst", "space": "O(1)" },
+  "LinkedList_Contains":          { "time": "O(n)",             "space": "O(1)" },
+  "LinkedList_Iterate":           { "time": "O(n)",             "space": "O(1)" },
+
+  "Queue_Add":                    { "time": "O(1) amortized",   "space": "O(1) amortized" },
+  "Queue_Remove":                 { "time": "O(1) per Dequeue", "space": "O(1)" },
+  "Queue_Contains":               { "time": "O(n) (Peek O(1) + Contains O(n))", "space": "O(1)" },
+  "Queue_Iterate":                { "time": "O(n)",             "space": "O(1)" },
+
+  "Stack_Add":                    { "time": "O(1) amortized",   "space": "O(1) amortized" },
+  "Stack_Remove":                 { "time": "O(1) per Pop",     "space": "O(1)" },
+  "Stack_Contains":               { "time": "O(n) (Peek O(1) + Contains O(n))", "space": "O(1)" },
+  "Stack_Iterate":                { "time": "O(n)",             "space": "O(1)" },
+
+  "Array_Set":                    { "time": "O(1)",             "space": "O(1)" },
+  "Array_Get":                    { "time": "O(1)",             "space": "O(1)" },
+  "Array_Iterate":                { "time": "O(n)",             "space": "O(1)" }
+}
