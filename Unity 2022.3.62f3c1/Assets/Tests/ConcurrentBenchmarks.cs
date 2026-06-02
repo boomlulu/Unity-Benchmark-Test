@@ -504,38 +504,40 @@ namespace CollectionBenchmarks
         // =====================================================================
 
         // ---- 增: Add build to N. Wraps ConcurrentQueue + SemaphoreSlim bookkeeping -> GC > 0.
-        //      Disposed inside produce (returned object kept alive by sink; Dispose is cheap &
-        //      doesn't free managed memory we measure). ----
-        static object Blocking_Add_Core<T>(T[] src, int n)
+        //      Each measurement uses its OWN fresh instance: setup news an empty BC, action fills
+        //      it to N, cleanup disposes it. Never reuse a disposed instance across iterations. ----
+        static void Blocking_Add_Core<T>(T[] src, int n)
         {
-            var bc = new BlockingCollection<T>();
-            for (int i = 0; i < n; i++) bc.Add(src[i]);
-            return bc;
+            BlockingCollection<T> bc = null;
+            Bench.MeasureTimeAndGc(
+                action: () =>
+                {
+                    for (int i = 0; i < n; i++) bc.Add(src[i]);
+                },
+                setup: () => { bc = new BlockingCollection<T>(); },
+                cleanup: () => { bc?.Dispose(); bc = null; },
+                n: n);
         }
 
         [Test, Performance]
         public void BlockingCollection_Add_int([Values(1, 100, 10000)] int n)
-            => Bench.MeasureTimeAndGcProducing(() => Blocking_Add_Core(Src.Ints(n), n), n);
+            => Blocking_Add_Core(Src.Ints(n), n);
 
         [Test, Performance]
         public void BlockingCollection_Add_val([Values(1, 100, 10000)] int n)
-            => Bench.MeasureTimeAndGcProducing(() => Blocking_Add_Core(Src.Vals(n), n), n);
+            => Blocking_Add_Core(Src.Vals(n), n);
 
         [Test, Performance]
         public void BlockingCollection_Add_ref([Values(1, 100, 10000)] int n)
-            => Bench.MeasureTimeAndGcProducing(() => Blocking_Add_Core(Src.Refs(n), n), n);
+            => Blocking_Add_Core(Src.Refs(n), n);
 
-        // ---- 删: Take drain to empty. Destructive -> rebuild full collection each measurement.
-        //      Take blocks when empty, so we drain exactly Count items (never past empty). ----
+        // ---- 删: Take drain to empty. Destructive -> setup rebuilds a fresh FULL collection each
+        //      measurement, action drains exactly Count items (Take blocks at empty, so never past
+        //      empty), cleanup disposes. setup always pairs with action so action never sees a
+        //      disposed instance. ----
         static void Blocking_Remove_Core<T>(T[] src, int n)
         {
             BlockingCollection<T> bc = null;
-            void Build()
-            {
-                bc?.Dispose();
-                bc = new BlockingCollection<T>();
-                for (int i = 0; i < n; i++) bc.Add(src[i]);
-            }
             int sink = 0;
             Bench.MeasureTimeAndGc(
                 action: () =>
@@ -543,8 +545,12 @@ namespace CollectionBenchmarks
                     int count = bc.Count;
                     for (int i = 0; i < count; i++) { bc.Take(); sink++; }
                 },
-                setup: Build,
-                cleanup: () => { bc?.Dispose(); if (sink < 0) UnityEngine.Debug.Log(sink); },
+                setup: () =>
+                {
+                    bc = new BlockingCollection<T>();
+                    for (int i = 0; i < n; i++) bc.Add(src[i]);
+                },
+                cleanup: () => { bc?.Dispose(); bc = null; if (sink < 0) UnityEngine.Debug.Log(sink); },
                 n: n);
         }
 
@@ -561,19 +567,24 @@ namespace CollectionBenchmarks
             => Blocking_Remove_Core(Src.Refs(n), n);
 
         // ---- 遍历: foreach over GetConsumingEnumerable? No — that drains. Use plain foreach which
-        //      enumerates a snapshot without consuming. GC ~= 0 in steady state ----
+        //      enumerates a snapshot without consuming. setup rebuilds a fresh FULL collection each
+        //      measurement (so iterating never hits a disposed instance), action does a plain
+        //      non-consuming foreach, cleanup disposes. GC ~= 0 in steady state. ----
         static void Blocking_Iterate_Core<T>(T[] src, int n)
         {
-            var bc = new BlockingCollection<T>();
-            for (int i = 0; i < n; i++) bc.Add(src[i]);
+            BlockingCollection<T> bc = null;
             long sink = 0;
             Bench.MeasureTimeAndGc(
                 action: () =>
                 {
                     foreach (var v in bc) sink += v.GetHashCode();
                 },
-                setup: null,
-                cleanup: () => { bc.Dispose(); if (sink < 0) UnityEngine.Debug.Log(sink); },
+                setup: () =>
+                {
+                    bc = new BlockingCollection<T>();
+                    for (int i = 0; i < n; i++) bc.Add(src[i]);
+                },
+                cleanup: () => { bc?.Dispose(); bc = null; if (sink < 0) UnityEngine.Debug.Log(sink); },
                 n: n);
         }
 

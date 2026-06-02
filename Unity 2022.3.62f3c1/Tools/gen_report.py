@@ -20,6 +20,7 @@ If no path given, auto-discovers:
 """
 
 import csv
+import datetime
 import glob
 import json
 import os
@@ -183,8 +184,9 @@ def fmt_num(x, digits=4):
 def write_md(rows, path):
     cols = ["家族", "集合", "操作", "元素类型", "N", "时间中位(ms)", "GC(bytes)",
             "Big-O 时间", "Big-O 空间", "备注"]
+    generated = datetime.date.today().isoformat()
     lines = ["# Collection Benchmark Results", "",
-             f"Rows: {len(rows)}  (Stage-1 sample run)", "",
+             f"Rows: {len(rows)}  (generated {generated})", "",
              "| " + " | ".join(cols) + " |",
              "|" + "|".join(["---"] * len(cols)) + "|"]
     for r in rows:

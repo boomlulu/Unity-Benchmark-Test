@@ -21,8 +21,10 @@ using Unity.PerformanceTesting;
 
 namespace CollectionBenchmarks
 {
-    /// <summary>~24B value struct. GetHashCode=>A, IEquatable for set/dict keys.</summary>
-    public struct ValStruct : IEquatable<ValStruct>
+    /// <summary>~24B value struct. GetHashCode=>A, IEquatable for set/dict keys,
+    /// IComparable (by A) for ordered sets (SortedSet/ImmutableSortedSet red-black tree).
+    /// Stays unmanaged (no reference-type fields) so Native family `where T:unmanaged` still binds.</summary>
+    public struct ValStruct : IEquatable<ValStruct>, IComparable<ValStruct>
     {
         public int A;
         public int B;
@@ -40,10 +42,12 @@ namespace CollectionBenchmarks
         public bool Equals(ValStruct other) => A == other.A && B == other.B && C == other.C && D == other.D;
         public override bool Equals(object obj) => obj is ValStruct v && Equals(v);
         public override int GetHashCode() => A;
+        public int CompareTo(ValStruct other) => A.CompareTo(other.A);
     }
 
-    /// <summary>Reference element. GetHashCode=>A, IEquatable for set/dict keys.</summary>
-    public sealed class RefElem : IEquatable<RefElem>
+    /// <summary>Reference element. GetHashCode=>A, IEquatable for set/dict keys,
+    /// IComparable (by A) for ordered sets (SortedSet/ImmutableSortedSet red-black tree).</summary>
+    public sealed class RefElem : IEquatable<RefElem>, IComparable<RefElem>
     {
         public int A;
         public int B;
@@ -57,6 +61,7 @@ namespace CollectionBenchmarks
         public bool Equals(RefElem other) => other != null && A == other.A && B == other.B;
         public override bool Equals(object obj) => obj is RefElem r && Equals(r);
         public override int GetHashCode() => A;
+        public int CompareTo(RefElem other) => other is null ? 1 : A.CompareTo(other.A);
     }
 
     /// <summary>Size ladders (SPEC §1).</summary>
