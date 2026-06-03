@@ -21,6 +21,7 @@ It does NOT run benchmarks, does NOT touch git, does NOT start any server.
 """
 
 import csv
+import glob
 import json
 import os
 import sys
@@ -31,15 +32,40 @@ import sys
 WEB_DIR = os.path.dirname(os.path.abspath(__file__))
 BENCH_DIR = os.path.dirname(WEB_DIR)                       # benchmarks/
 HISTORY_DIR = os.path.join(BENCH_DIR, "history")
-DEFAULT_SNAPSHOT = "20260603-0307__2067470__baseline"
+# Last-resort fallback when history/ has no snapshot at all.
+FALLBACK_CSV = os.path.join(
+    BENCH_DIR, "..", "Unity 2022.3.62f3c1", "Results", "CollectionBenchmark.csv")
+
+
+def _latest_history_snapshot():
+    """Return the absolute path of the latest snapshot dir under history/, or None.
+
+    Snapshot ids are prefixed with a YYYYMMDD-HHMM timestamp, so lexicographic
+    max == newest. Prefer dirs matching '*__baseline'; if none, fall back to the
+    newest snapshot of any kind. Uses glob (stdlib) and is space-safe (we never
+    shell out — all paths are plain python strings).
+    """
+    if not os.path.isdir(HISTORY_DIR):
+        return None
+    baselines = sorted(d for d in glob.glob(os.path.join(HISTORY_DIR, "*__baseline"))
+                       if os.path.isdir(d))
+    if baselines:
+        return baselines[-1]
+    # no *__baseline — take the newest snapshot dir of any kind
+    snaps = sorted(d for d in glob.glob(os.path.join(HISTORY_DIR, "*"))
+                   if os.path.isdir(d))
+    return snaps[-1] if snaps else None
 
 
 def resolve_csv(arg):
     """Resolve a CLI arg (none / snapshot-id / explicit path) to (csv_path, meta_path)."""
     if arg is None:
-        snap = os.path.join(HISTORY_DIR, DEFAULT_SNAPSHOT)
-        return (os.path.join(snap, "CollectionBenchmark.csv"),
-                os.path.join(snap, "meta.json"))
+        snap = _latest_history_snapshot()
+        if snap is not None:
+            return (os.path.join(snap, "CollectionBenchmark.csv"),
+                    os.path.join(snap, "meta.json"))
+        # history/ empty -> last-resort committed Results CSV
+        return (FALLBACK_CSV, os.path.join(os.path.dirname(FALLBACK_CSV), "meta.json"))
     # explicit path to a csv file
     if arg.endswith(".csv") and os.path.isfile(arg):
         return (arg, os.path.join(os.path.dirname(arg), "meta.json"))

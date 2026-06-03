@@ -1,0 +1,11 @@
+{
+  "ts": "2026-06-03T14:46:38+08:00",
+  "git_sha": "e67da6e",
+  "git_dirty": true,
+  "unity_version": "2022.3.62f3c1",
+  "label": "baseline",
+  "rows": 1968,
+  "total": 1968,
+  "passed": 1968,
+  "failed": 0
+}

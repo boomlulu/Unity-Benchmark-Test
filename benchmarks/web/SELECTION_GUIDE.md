@@ -1,6 +1,6 @@
 # 集合选型决策指南
 
-> 数据集: **baseline** (sha `2067470`, Unity 2022.3.62f3c1, 1521 行) — 由 `gen_web.py` 自动生成。
+> 数据集: **baseline** (sha `e67da6e`, Unity 2022.3.62f3c1, 1968 行) — 由 `gen_web.py` 自动生成。
 >
 > 本文件内容与 `index.html` 的「选型指南」视图一致。结论分两部分：
 > **(1) 实测自动派生** 每个规范操作桶在 N=10000 / elem=int 下最快的集合；
@@ -10,11 +10,11 @@
 
 | 需求 | 推荐集合 | 实测 (代表 op) | Big-O 时间 |
 |------|----------|----------------|------------|
-| 需要快速**增** | **Stack** | 0.396 ms (`Add`) | O(1) amortized |
-| 需要快速**删** | **ImmutableSortedSet** | 0.011 ms (`Remove`) | O(log n) |
-| 需要快速**改** | **ImmutableList** | 0.0008 ms (`SetItem`) | O(log n) |
-| 需要快速**查** | **Array** | 0.0093 ms (`Get`) | O(1) |
-| 需要快速**遍历** | **ImmutableArray** | 0.341 ms (`Iterate`) | O(n) |
+| 需要快速**增** | **Stack** | 0.426 ms (`Add`) | O(1) amortized |
+| 需要快速**删** | **ImmutableSortedSet** | 0.010 ms (`Remove`) | O(log n) |
+| 需要快速**改** | **ImmutableSortedDictionary** | 0.0012 ms (`SetItem`) | O(log n) |
+| 需要快速**查** | **Array** | 0.0094 ms (`Get`) | O(1) |
+| 需要快速**遍历** | **ImmutableArray** | 0.342 ms (`Iterate`) | O(n) |
 
 > 桶映射: 增=Add/Enqueue/Push/Build...; 删=Remove/Dequeue/Pop/Drain...; 改=Set/Update...; 查=Get/Contains/ContainsKey/Peek...; 遍历=Iterate。
 >
