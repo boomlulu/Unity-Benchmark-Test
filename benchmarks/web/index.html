@@ -49,7 +49,16 @@
   .seg button:last-child{border-right:0}
   .seg button.on{background:var(--accent);color:#06203f}
   table{border-collapse:collapse;width:100%}
-  .matrix-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+  /* Intentionally NOT a scroll container. A non-visible horizontal overflow
+     coerces overflow-y to auto (CSS spec), which would turn .matrix-wrap into a
+     scroll box — making the sticky thead stick to THIS box's viewport (~174px
+     down, floating into the data rows) instead of the page viewport. Keep
+     overflow:visible so the thead's sticky offset is measured against the page;
+     the table itself is width:100% so it fits without horizontal scrolling. */
+  .matrix-wrap{overflow:visible;border:1px solid var(--line);border-radius:10px}
+  /* Full-width so the 6-bucket matrix fits the page viewport without needing a
+     horizontal scroll container (the cells are short numbers). */
+  .matrix{width:100%}
   .matrix th,.matrix td{padding:6px 8px;text-align:center;border:1px solid var(--line);
     font-variant-numeric:tabular-nums;white-space:nowrap}
   /* Heat-matrix column-header row (增/删/改/查/遍历 buckets) stays pinned just
