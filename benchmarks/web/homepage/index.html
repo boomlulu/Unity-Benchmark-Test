@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unity 技术分享 · luwenyi</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel2: #1d212b;
+    --line: #2a2f3a;
+    --txt: #e6e9ef;
+    --muted: #9aa3b2;
+    --accent: #5aa9ff;
+    --accent2: #ffd166;
+    --good: #2fbf71;
+    --bad: #e5484d;
+    --warn: #f5a524;
+    --grad-start: #1a1e27;
+    --grad-end: #13161d;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--txt);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei",
+      "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15, 17, 21, 0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    height: 56px;
+    gap: 0;
+  }
+  .nav-brand {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--txt);
+    margin-right: auto;
+    letter-spacing: .3px;
+  }
+  .nav-brand span { color: var(--accent); }
+  .nav-links {
+    display: flex;
+    gap: 6px;
+  }
+  .nav-links a {
+    padding: 6px 14px;
+    border-radius: 7px;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 500;
+    transition: background .15s, color .15s;
+  }
+  .nav-links a:hover {
+    background: var(--panel2);
+    color: var(--txt);
+    text-decoration: none;
+  }
+  .nav-links a.highlight {
+    background: var(--accent);
+    color: #06203f;
+    font-weight: 700;
+  }
+  .nav-links a.highlight:hover {
+    background: #78b8ff;
+    color: #06203f;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 80px 32px 64px;
+    max-width: 960px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(90, 169, 255, 0.12);
+    border: 1px solid rgba(90, 169, 255, 0.3);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 12.5px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 24px;
+    letter-spacing: .3px;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 18px;
+    letter-spacing: -.5px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 580px;
+    margin: 0 auto 36px;
+    line-height: 1.7;
+  }
+  .hero-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 11px 24px;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 700;
+    transition: transform .12s, box-shadow .12s;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+  }
+  .btn:hover { transform: translateY(-1px); text-decoration: none; }
+  .btn-primary {
+    background: var(--accent);
+    color: #06203f;
+    box-shadow: 0 4px 16px rgba(90, 169, 255, 0.25);
+  }
+  .btn-primary:hover { box-shadow: 0 6px 20px rgba(90, 169, 255, 0.38); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--txt);
+    border: 1px solid var(--line);
+  }
+  .btn-ghost:hover { background: var(--panel2); }
+
+  /* ── STATS BAR ── */
+  .stats {
+    max-width: 960px;
+    margin: 0 auto 72px;
+    padding: 0 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .stat {
+    background: var(--panel);
+    padding: 20px 24px;
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    display: block;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* ── SECTION ── */
+  section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px 72px;
+  }
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* ── FEATURE CARDS ── */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px 22px;
+    transition: border-color .15s, transform .12s, box-shadow .12s;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .card:hover {
+    border-color: rgba(90, 169, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--txt);
+  }
+  .card p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    flex: 1;
+  }
+  .card-link {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+  }
+  .card-link:hover { text-decoration: none; color: #78b8ff; }
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .3px;
+  }
+  .tag-new { background: rgba(47, 191, 113, 0.15); color: var(--good); }
+  .tag-hot { background: rgba(229, 72, 77, 0.15); color: var(--bad); }
+  .tag-data { background: rgba(255, 209, 102, 0.15); color: var(--accent2); }
+  .tag-perf { background: rgba(90, 169, 255, 0.15); color: var(--accent); }
+
+  /* ── FEATURED (benchmark) ── */
+  .featured {
+    background: linear-gradient(135deg, #141827, #0f1320);
+    border: 1px solid rgba(90, 169, 255, 0.25);
+    border-radius: 14px;
+    padding: 28px 30px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .featured-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: var(--txt);
+  }
+  .featured-desc {
+    color: var(--muted);
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+  .featured-meta {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .meta-chip {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .meta-chip b { color: var(--txt); }
+  .featured-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+  .preview-box {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 14px;
+    text-align: center;
+    width: 140px;
+  }
+  .preview-box .big {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    display: block;
+  }
+  .preview-box .small {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  /* ── TOPIC LIST ── */
+  .topic-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .topic-item {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    gap: 14px;
+    align-items: center;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 18px;
+    transition: border-color .15s;
+  }
+  .topic-item:hover { border-color: rgba(90, 169, 255, 0.35); }
+  .topic-num {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--line);
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .topic-body h4 { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+  .topic-body p { font-size: 12.5px; color: var(--muted); }
+  .topic-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 28px 32px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  footer a { color: var(--muted); }
+  footer a:hover { color: var(--accent); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    nav { padding: 0 16px; }
+    .hero { padding: 48px 16px 40px; }
+    .stats { margin: 0 16px 48px; }
+    section { padding: 0 16px 48px; }
+    .featured { grid-template-columns: 1fr; }
+    .featured-cta { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+    footer { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-brand">⚙️ <span>Unity</span> 技术分享</div>
+  <div class="nav-links">
+    <a href="#topics">专题</a>
+    <a href="#resources">资源</a>
+    <a href="benchmark/" class="highlight">📊 性能报告</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-tag">
+    <span>●</span> 持续更新中 · Unity 6 / C# 12
+  </div>
+  <h1>Unity 性能优化<br>与<em>工程实践</em>分享</h1>
+  <p>聚焦集合选型、热重载、帧同步、渲染管线等一线工程问题，基于真实 Benchmark 数据驱动决策。</p>
+  <div class="hero-btns">
+    <a href="benchmark/" class="btn btn-primary">📊 查看性能报告</a>
+    <a href="#topics" class="btn btn-ghost">浏览专题 ↓</a>
+  </div>
+</div>
+
+<!-- ── STATS ── -->
+<div class="stats">
+  <div class="stat">
+    <span class="stat-num">24+</span>
+    <div class="stat-label">集合类型对比</div>
+  </div>
+  <div class="stat">
+    <span class="stat-num">5</span>
+    <div class="stat-label">操作维度（增删改查遍历）</div>
+  </div>
+  <div class="stat">
+    <span class="stat-num">4</span>
+    <div class="stat-label">元素类型（int/struct/class/bool）</div>
+  </div>
+  <div class="stat">
+    <span class="stat-num">6</span>
+    <div class="stat-label">数据规模 N</div>
+  </div>
+</div>
+
+<!-- ── FEATURED ── -->
+<section id="topics">
+  <div class="section-title">精选内容</div>
+
+  <div class="featured">
+    <div>
+      <div style="margin-bottom:10px">
+        <span class="tag tag-new">NEW</span>
+        <span class="tag tag-data" style="margin-left:6px">基准测试</span>
+      </div>
+      <div class="featured-title">🗂️ Unity C# 集合性能全景报告</div>
+      <div class="featured-desc">
+        涵盖 <b>List、Dictionary、HashSet、NativeArray、NativeList、NativeHashMap</b>
+        等 24+ 集合，使用 BenchmarkDotNet 在多规模、多元素类型下系统测量增删改查遍历五大操作的纳秒级耗时。
+        热力图 + 柱状图 + 选型建议，帮你在工程中做出有数据支撑的集合选型决策。
+      </div>
+      <div class="featured-meta">
+        <div class="meta-chip">📦 <b>24+</b> 集合</div>
+        <div class="meta-chip">⏱ <b>ns 级</b>精度</div>
+        <div class="meta-chip">🔄 <b>6</b> 规模梯度</div>
+        <div class="meta-chip">🧩 <b>4</b> 元素类型</div>
+      </div>
+    </div>
+    <div class="featured-cta">
+      <div class="preview-box">
+        <span class="big">24+</span>
+        <div class="small">集合类型</div>
+      </div>
+      <div class="preview-box">
+        <span class="big">1968</span>
+        <div class="small">测试用例</div>
+      </div>
+      <a href="benchmark/" class="btn btn-primary" style="width:100%;justify-content:center">打开报告 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── TOPIC CARDS ── -->
+<section>
+  <div class="section-title">技术专题</div>
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-icon" style="background:rgba(90,169,255,0.12)">📊</div>
+      <div>
+        <span class="tag tag-new">NEW</span>
+        <h3 style="margin-top:6px">C# 集合基准测试</h3>
+      </div>
+      <p>系统对比 Unity 中常用的托管集合与 Native 集合在不同 N 规模下的性能表现，涵盖增删改查遍历五大场景。</p>
+      <a href="benchmark/" class="card-link">查看报告 →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon" style="background:rgba(47,191,113,0.12)">🔄</div>
+      <div>
+        <span class="tag tag-perf">HybridCLR</span>
+        <h3 style="margin-top:6px">热重载 · 不卸载模式</h3>
+      </div>
+      <p>基于 HybridCLR 的热更架构设计，NoUnload 模式下的内存管理策略与 IL2CPP AOT 联动最佳实践。</p>
+      <span class="card-link" style="color:var(--muted);cursor:default">即将发布</span>
+    </div>
+
+    <div class="card">
+      <div class="card-icon" style="background:rgba(255,209,102,0.12)">🔁</div>
+      <div>
+        <span class="tag tag-data">帧同步</span>
+        <h3 style="margin-top:6px">确定性帧同步架构</h3>
+      </div>
+      <p>BoomNetwork 帧同步协议设计：KCP 传输、快照回滚、Desync 检测与定位，以及服务端权威实体系统。</p>
+      <span class="card-link" style="color:var(--muted);cursor:default">即将发布</span>
+    </div>
+
+    <div class="card">
+      <div class="card-icon" style="background:rgba(229,72,77,0.12)">⚡</div>
+      <div>
+        <span class="tag tag-hot">性能</span>
+        <h3 style="margin-top:6px">Unity Jobs + Burst 实战</h3>
+      </div>
+      <p>多线程任务调度、NativeContainer 使用规范、Burst 编译约束，以及与主线程协作的安全边界。</p>
+      <span class="card-link" style="color:var(--muted);cursor:default">即将发布</span>
+    </div>
+
+    <div class="card">
+      <div class="card-icon" style="background:rgba(245,165,36,0.12)">🎨</div>
+      <div>
+        <span class="tag tag-perf">渲染</span>
+        <h3 style="margin-top:6px">URP 自定义渲染管线</h3>
+      </div>
+      <p>ScriptableRenderPass 扩展、RenderGraph 迁移路径，以及移动端 GPU 带宽优化实践。</p>
+      <span class="card-link" style="color:var(--muted);cursor:default">即将发布</span>
+    </div>
+
+    <div class="card">
+      <div class="card-icon" style="background:rgba(90,169,255,0.08)">🤖</div>
+      <div>
+        <span class="tag tag-data">AI</span>
+        <h3 style="margin-top:6px">HTN 层次任务网络 AI</h3>
+      </div>
+      <p>HTNPlanner / PlanRunner 架构设计，WorldState 建模与 Precondition/Effect 定义，多怪物 AI 行为实现案例。</p>
+      <span class="card-link" style="color:var(--muted);cursor:default">即将发布</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── TOPICS LIST ── -->
+<section id="resources">
+  <div class="section-title">选型速查 · 集合推荐</div>
+  <div class="topic-list">
+
+    <div class="topic-item">
+      <div class="topic-num">01</div>
+      <div class="topic-body">
+        <h4>读多写少 · 固定大小</h4>
+        <p>优先 <b>NativeArray</b>，Burst 友好，零 GC，遍历性能最优</p>
+      </div>
+      <div class="topic-tags">
+        <span class="tag tag-perf">Native</span>
+        <span class="tag tag-new">推荐</span>
+      </div>
+    </div>
+
+    <div class="topic-item">
+      <div class="topic-num">02</div>
+      <div class="topic-body">
+        <h4>动态增删 · 托管环境</h4>
+        <p>小数据量用 <b>List&lt;T&gt;</b>，大数据量或高频增删考虑 <b>NativeList</b></p>
+      </div>
+      <div class="topic-tags">
+        <span class="tag tag-data">动态</span>
+      </div>
+    </div>
+
+    <div class="topic-item">
+      <div class="topic-num">03</div>
+      <div class="topic-body">
+        <h4>键值查找 · 高频 Contains</h4>
+        <p><b>HashSet&lt;T&gt;</b> / <b>NativeHashSet</b> O(1) 查找；字典类用 <b>NativeHashMap</b> 优先</p>
+      </div>
+      <div class="topic-tags">
+        <span class="tag tag-hot">查找</span>
+      </div>
+    </div>
+
+    <div class="topic-item">
+      <div class="topic-num">04</div>
+      <div class="topic-body">
+        <h4>有序遍历 · 优先队列</h4>
+        <p><b>SortedList</b> / <b>SortedSet</b> 维持排序，频繁出堆入堆场景用自定义 MinHeap</p>
+      </div>
+      <div class="topic-tags">
+        <span class="tag tag-data">有序</span>
+      </div>
+    </div>
+
+  </div>
+  <div style="margin-top:16px;text-align:center">
+    <a href="benchmark/" class="btn btn-ghost">查看完整性能报告，数据说话 →</a>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div style="margin-bottom:8px">
+    <b style="color:var(--txt)">Unity 技术分享</b> · luwenyi
+  </div>
+  <div style="font-size:12px">
+    基准数据由 <a href="https://benchmarkdotnet.org" target="_blank">BenchmarkDotNet</a> 生成 ·
+    <a href="benchmark/">性能报告</a> ·
+    数据持续更新中
+  </div>
+</footer>
+
+</body>
+</html>
