@@ -416,16 +416,22 @@ namespace CollectionBenchmarks
             => NativeCore.Array_Set(n, Src.Ints(n));
         [Test, Performance] public void NativeArray_Set_struct([Values(1, 100, 10000)] int n)
             => NativeCore.Array_Set(n, Src.Vals(n));
+        [Test, Performance] public void NativeArray_Set_bool([Values(1, 100, 10000)] int n)
+            => NativeCore.Array_Set(n, Src.Bools(n));
 
         [Test, Performance] public void NativeArray_Get_int([Values(1, 100, 10000)] int n)
             => NativeCore.Array_Get(n, Src.Ints(n));
         [Test, Performance] public void NativeArray_Get_struct([Values(1, 100, 10000)] int n)
             => NativeCore.Array_Get(n, Src.Vals(n));
+        [Test, Performance] public void NativeArray_Get_bool([Values(1, 100, 10000)] int n)
+            => NativeCore.Array_Get(n, Src.Bools(n));
 
         [Test, Performance] public void NativeArray_Iterate_int([Values(1, 100, 10000)] int n)
             => NativeCore.Array_Iterate(n, Src.Ints(n));
         [Test, Performance] public void NativeArray_Iterate_struct([Values(1, 100, 10000)] int n)
             => NativeCore.Array_Iterate(n, Src.Vals(n));
+        [Test, Performance] public void NativeArray_Iterate_bool([Values(1, 100, 10000)] int n)
+            => NativeCore.Array_Iterate(n, Src.Bools(n));
     }
 
     // -------------------------------------------------------------------------
@@ -438,31 +444,43 @@ namespace CollectionBenchmarks
             => NativeCore.List_Add(n, Src.Ints(n));
         [Test, Performance] public void NativeList_Add_struct([Values(1, 100, 10000)] int n)
             => NativeCore.List_Add(n, Src.Vals(n));
+        [Test, Performance] public void NativeList_Add_bool([Values(1, 100, 10000)] int n)
+            => NativeCore.List_Add(n, Src.Bools(n));
 
         [Test, Performance] public void NativeList_Remove_int([Values(1, 100, 10000)] int n)
             => NativeCore.List_Remove(n, Src.Ints(n));
         [Test, Performance] public void NativeList_Remove_struct([Values(1, 100, 10000)] int n)
             => NativeCore.List_Remove(n, Src.Vals(n));
+        [Test, Performance] public void NativeList_Remove_bool([Values(1, 100, 10000)] int n)
+            => NativeCore.List_Remove(n, Src.Bools(n));
 
         [Test, Performance] public void NativeList_Set_int([Values(1, 100, 10000)] int n)
             => NativeCore.List_Set(n, Src.Ints(n));
         [Test, Performance] public void NativeList_Set_struct([Values(1, 100, 10000)] int n)
             => NativeCore.List_Set(n, Src.Vals(n));
+        [Test, Performance] public void NativeList_Set_bool([Values(1, 100, 10000)] int n)
+            => NativeCore.List_Set(n, Src.Bools(n));
 
         [Test, Performance] public void NativeList_Get_int([Values(1, 100, 10000)] int n)
             => NativeCore.List_Get(n, Src.Ints(n));
         [Test, Performance] public void NativeList_Get_struct([Values(1, 100, 10000)] int n)
             => NativeCore.List_Get(n, Src.Vals(n));
+        [Test, Performance] public void NativeList_Get_bool([Values(1, 100, 10000)] int n)
+            => NativeCore.List_Get(n, Src.Bools(n));
 
         [Test, Performance] public void NativeList_Contains_int([Values(1, 100, 10000)] int n)
             => NativeCore.List_Contains(n, Src.Ints(n));
         [Test, Performance] public void NativeList_Contains_struct([Values(1, 100, 10000)] int n)
             => NativeCore.List_Contains(n, Src.Vals(n));
+        [Test, Performance] public void NativeList_Contains_bool([Values(1, 100, 10000)] int n)
+            => NativeCore.List_Contains(n, Src.Bools(n));
 
         [Test, Performance] public void NativeList_Iterate_int([Values(1, 100, 10000)] int n)
             => NativeCore.List_Iterate(n, Src.Ints(n));
         [Test, Performance] public void NativeList_Iterate_struct([Values(1, 100, 10000)] int n)
             => NativeCore.List_Iterate(n, Src.Vals(n));
+        [Test, Performance] public void NativeList_Iterate_bool([Values(1, 100, 10000)] int n)
+            => NativeCore.List_Iterate(n, Src.Bools(n));
     }
 
     // -------------------------------------------------------------------------
@@ -475,26 +493,36 @@ namespace CollectionBenchmarks
             => NativeCore.Map_Add(n, Src.Ints(n));
         [Test, Performance] public void NativeHashMap_Add_struct([Values(1, 100, 10000)] int n)
             => NativeCore.Map_Add(n, Src.Vals(n));
+        [Test, Performance] public void NativeHashMap_Add_bool([Values(1, 100, 10000)] int n)
+            => NativeCore.Map_Add(n, Src.Bools(n));
 
         [Test, Performance] public void NativeHashMap_Remove_int([Values(1, 100, 10000)] int n)
             => NativeCore.Map_Remove(n, Src.Ints(n));
         [Test, Performance] public void NativeHashMap_Remove_struct([Values(1, 100, 10000)] int n)
             => NativeCore.Map_Remove(n, Src.Vals(n));
+        [Test, Performance] public void NativeHashMap_Remove_bool([Values(1, 100, 10000)] int n)
+            => NativeCore.Map_Remove(n, Src.Bools(n));
 
         [Test, Performance] public void NativeHashMap_Set_int([Values(1, 100, 10000)] int n)
             => NativeCore.Map_Set(n, Src.Ints(n));
         [Test, Performance] public void NativeHashMap_Set_struct([Values(1, 100, 10000)] int n)
             => NativeCore.Map_Set(n, Src.Vals(n));
+        [Test, Performance] public void NativeHashMap_Set_bool([Values(1, 100, 10000)] int n)
+            => NativeCore.Map_Set(n, Src.Bools(n));
 
         [Test, Performance] public void NativeHashMap_Get_int([Values(1, 100, 10000)] int n)
             => NativeCore.Map_Get(n, Src.Ints(n));
         [Test, Performance] public void NativeHashMap_Get_struct([Values(1, 100, 10000)] int n)
             => NativeCore.Map_Get(n, Src.Vals(n));
+        [Test, Performance] public void NativeHashMap_Get_bool([Values(1, 100, 10000)] int n)
+            => NativeCore.Map_Get(n, Src.Bools(n));
 
         [Test, Performance] public void NativeHashMap_Iterate_int([Values(1, 100, 10000)] int n)
             => NativeCore.Map_Iterate(n, Src.Ints(n));
         [Test, Performance] public void NativeHashMap_Iterate_struct([Values(1, 100, 10000)] int n)
             => NativeCore.Map_Iterate(n, Src.Vals(n));
+        [Test, Performance] public void NativeHashMap_Iterate_bool([Values(1, 100, 10000)] int n)
+            => NativeCore.Map_Iterate(n, Src.Bools(n));
     }
 
     // -------------------------------------------------------------------------
@@ -534,15 +562,21 @@ namespace CollectionBenchmarks
             => NativeCore.Queue_Add(n, Src.Ints(n));
         [Test, Performance] public void NativeQueue_Add_struct([Values(1, 100, 10000)] int n)
             => NativeCore.Queue_Add(n, Src.Vals(n));
+        [Test, Performance] public void NativeQueue_Add_bool([Values(1, 100, 10000)] int n)
+            => NativeCore.Queue_Add(n, Src.Bools(n));
 
         [Test, Performance] public void NativeQueue_Remove_int([Values(1, 100, 10000)] int n)
             => NativeCore.Queue_Remove(n, Src.Ints(n));
         [Test, Performance] public void NativeQueue_Remove_struct([Values(1, 100, 10000)] int n)
             => NativeCore.Queue_Remove(n, Src.Vals(n));
+        [Test, Performance] public void NativeQueue_Remove_bool([Values(1, 100, 10000)] int n)
+            => NativeCore.Queue_Remove(n, Src.Bools(n));
 
         [Test, Performance] public void NativeQueue_Iterate_int([Values(1, 100, 10000)] int n)
             => NativeCore.Queue_Iterate(n, Src.Ints(n));
         [Test, Performance] public void NativeQueue_Iterate_struct([Values(1, 100, 10000)] int n)
             => NativeCore.Queue_Iterate(n, Src.Vals(n));
+        [Test, Performance] public void NativeQueue_Iterate_bool([Values(1, 100, 10000)] int n)
+            => NativeCore.Queue_Iterate(n, Src.Bools(n));
     }
 }

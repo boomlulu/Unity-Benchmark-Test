@@ -80,6 +80,7 @@ namespace CollectionBenchmarks
         static readonly Dictionary<int, int[]> _ints = new Dictionary<int, int[]>();
         static readonly Dictionary<int, ValStruct[]> _vals = new Dictionary<int, ValStruct[]>();
         static readonly Dictionary<int, RefElem[]> _refs = new Dictionary<int, RefElem[]>();
+        static readonly Dictionary<int, bool[]> _bools = new Dictionary<int, bool[]>();
 
         public static int[] Ints(int n)
         {
@@ -110,6 +111,17 @@ namespace CollectionBenchmarks
                 a = new RefElem[n];
                 for (int i = 0; i < n; i++) a[i] = new RefElem(i);
                 _refs[n] = a;
+            }
+            return a;
+        }
+
+        public static bool[] Bools(int n)
+        {
+            if (!_bools.TryGetValue(n, out var a))
+            {
+                a = new bool[n];
+                for (int i = 0; i < n; i++) a[i] = (i & 1) == 0;
+                _bools[n] = a;
             }
             return a;
         }

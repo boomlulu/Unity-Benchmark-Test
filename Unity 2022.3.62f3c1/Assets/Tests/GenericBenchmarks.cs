@@ -45,6 +45,8 @@ namespace CollectionBenchmarks
         public void List_Add_val([Values(1, 100, 10000)] int n) => ListAddCore(Src.Vals(n), n);
         [Test, Performance]
         public void List_Add_ref([Values(1, 100, 10000)] int n) => ListAddCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void List_Add_bool([Values(1, 100, 10000)] int n) => ListAddCore(Src.Bools(n), n);
 
         // ---- List Insert(0) (head-insert build to N): O(n) shift per insert ----
         static void ListInsertHeadCore<T>(T[] src, int n)
@@ -65,6 +67,8 @@ namespace CollectionBenchmarks
         public void List_InsertHead_val([Values(1, 100, 10000)] int n) => ListInsertHeadCore(Src.Vals(n), n);
         [Test, Performance]
         public void List_InsertHead_ref([Values(1, 100, 10000)] int n) => ListInsertHeadCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void List_InsertHead_bool([Values(1, 100, 10000)] int n) => ListInsertHeadCore(Src.Bools(n), n);
 
         // ---- List RemoveAt(last) (drain to empty): destructive, rebuild in setup ----
         static void ListRemoveCore<T>(T[] src, int n)
@@ -86,6 +90,8 @@ namespace CollectionBenchmarks
         public void List_Remove_val([Values(1, 100, 10000)] int n) => ListRemoveCore(Src.Vals(n), n);
         [Test, Performance]
         public void List_Remove_ref([Values(1, 100, 10000)] int n) => ListRemoveCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void List_Remove_bool([Values(1, 100, 10000)] int n) => ListRemoveCore(Src.Bools(n), n);
 
         // ---- List this[i]=v (indexer set × M): O(1) write, GC ~= 0 ----
         static void ListSetCore<T>(T[] src, int n)
@@ -106,6 +112,8 @@ namespace CollectionBenchmarks
         public void List_Set_val([Values(1, 100, 10000)] int n) => ListSetCore(Src.Vals(n), n);
         [Test, Performance]
         public void List_Set_ref([Values(1, 100, 10000)] int n) => ListSetCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void List_Set_bool([Values(1, 100, 10000)] int n) => ListSetCore(Src.Bools(n), n);
 
         // ---- List this[i] (indexer get × M): O(1) read, GC ~= 0 ----
         static void ListGetCore<T>(T[] src, int n)
@@ -129,6 +137,8 @@ namespace CollectionBenchmarks
         public void List_Get_val([Values(1, 100, 10000)] int n) => ListGetCore(Src.Vals(n), n);
         [Test, Performance]
         public void List_Get_ref([Values(1, 100, 10000)] int n) => ListGetCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void List_Get_bool([Values(1, 100, 10000)] int n) => ListGetCore(Src.Bools(n), n);
 
         // ---- List Contains (linear O(n) scan × LinearScanCount): GC ~= 0 ----
         static void ListContainsCore<T>(T[] src, int n)
@@ -152,6 +162,8 @@ namespace CollectionBenchmarks
         public void List_Contains_val([Values(1, 100, 10000)] int n) => ListContainsCore(Src.Vals(n), n);
         [Test, Performance]
         public void List_Contains_ref([Values(1, 100, 10000)] int n) => ListContainsCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void List_Contains_bool([Values(1, 100, 10000)] int n) => ListContainsCore(Src.Bools(n), n);
 
         // ---- List Iterate (foreach full): GC ~= 0 ----
         static void ListIterateCore<T>(T[] src, int n)
@@ -174,6 +186,8 @@ namespace CollectionBenchmarks
         public void List_Iterate_val([Values(1, 100, 10000)] int n) => ListIterateCore(Src.Vals(n), n);
         [Test, Performance]
         public void List_Iterate_ref([Values(1, 100, 10000)] int n) => ListIterateCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void List_Iterate_bool([Values(1, 100, 10000)] int n) => ListIterateCore(Src.Bools(n), n);
 
         // =======================================================================
         // Dictionary<int,T>  — hash map (key=int, value=elem)
@@ -198,6 +212,8 @@ namespace CollectionBenchmarks
         public void Dictionary_Add_val([Values(1, 100, 10000)] int n) => DictAddCore(Src.Ints(n), Src.Vals(n), n);
         [Test, Performance]
         public void Dictionary_Add_ref([Values(1, 100, 10000)] int n) => DictAddCore(Src.Ints(n), Src.Refs(n), n);
+        [Test, Performance]
+        public void Dictionary_Add_bool([Values(1, 100, 10000)] int n) => DictAddCore(Src.Ints(n), Src.Bools(n), n);
 
         // ---- Dictionary Remove(k) × M (destructive, rebuild in setup) ----
         static void DictRemoveCore<T>(int[] keys, T[] vals, int n)
@@ -223,6 +239,8 @@ namespace CollectionBenchmarks
         public void Dictionary_Remove_val([Values(1, 100, 10000)] int n) => DictRemoveCore(Src.Ints(n), Src.Vals(n), n);
         [Test, Performance]
         public void Dictionary_Remove_ref([Values(1, 100, 10000)] int n) => DictRemoveCore(Src.Ints(n), Src.Refs(n), n);
+        [Test, Performance]
+        public void Dictionary_Remove_bool([Values(1, 100, 10000)] int n) => DictRemoveCore(Src.Ints(n), Src.Bools(n), n);
 
         // ---- Dictionary this[k]=v (indexer set × M): O(1) avg, GC ~= 0 ----
         static void DictSetCore<T>(int[] keys, T[] vals, int n)
@@ -244,6 +262,8 @@ namespace CollectionBenchmarks
         public void Dictionary_Set_val([Values(1, 100, 10000)] int n) => DictSetCore(Src.Ints(n), Src.Vals(n), n);
         [Test, Performance]
         public void Dictionary_Set_ref([Values(1, 100, 10000)] int n) => DictSetCore(Src.Ints(n), Src.Refs(n), n);
+        [Test, Performance]
+        public void Dictionary_Set_bool([Values(1, 100, 10000)] int n) => DictSetCore(Src.Ints(n), Src.Bools(n), n);
 
         // ---- Dictionary TryGetValue × M: O(1) avg, GC ~= 0 ----
         static void DictGetCore<T>(int[] keys, T[] vals, int n)
@@ -268,6 +288,8 @@ namespace CollectionBenchmarks
         public void Dictionary_Get_val([Values(1, 100, 10000)] int n) => DictGetCore(Src.Ints(n), Src.Vals(n), n);
         [Test, Performance]
         public void Dictionary_Get_ref([Values(1, 100, 10000)] int n) => DictGetCore(Src.Ints(n), Src.Refs(n), n);
+        [Test, Performance]
+        public void Dictionary_Get_bool([Values(1, 100, 10000)] int n) => DictGetCore(Src.Ints(n), Src.Bools(n), n);
 
         // ---- Dictionary Iterate (foreach KVP): GC ~= 0 ----
         static void DictIterateCore<T>(int[] keys, T[] vals, int n)
@@ -291,6 +313,8 @@ namespace CollectionBenchmarks
         public void Dictionary_Iterate_val([Values(1, 100, 10000)] int n) => DictIterateCore(Src.Ints(n), Src.Vals(n), n);
         [Test, Performance]
         public void Dictionary_Iterate_ref([Values(1, 100, 10000)] int n) => DictIterateCore(Src.Ints(n), Src.Refs(n), n);
+        [Test, Performance]
+        public void Dictionary_Iterate_bool([Values(1, 100, 10000)] int n) => DictIterateCore(Src.Ints(n), Src.Bools(n), n);
 
         // =======================================================================
         // HashSet<T>  — hash set (element is key)
@@ -405,6 +429,8 @@ namespace CollectionBenchmarks
         public void SortedDictionary_Add_val([Values(1, 100, 10000)] int n) => SortedDictAddCore(Src.Ints(n), Src.Vals(n), n);
         [Test, Performance]
         public void SortedDictionary_Add_ref([Values(1, 100, 10000)] int n) => SortedDictAddCore(Src.Ints(n), Src.Refs(n), n);
+        [Test, Performance]
+        public void SortedDictionary_Add_bool([Values(1, 100, 10000)] int n) => SortedDictAddCore(Src.Ints(n), Src.Bools(n), n);
 
         // ---- SortedDictionary Remove(k) × M (destructive, rebuild in setup) ----
         static void SortedDictRemoveCore<T>(int[] keys, T[] vals, int n)
@@ -430,6 +456,8 @@ namespace CollectionBenchmarks
         public void SortedDictionary_Remove_val([Values(1, 100, 10000)] int n) => SortedDictRemoveCore(Src.Ints(n), Src.Vals(n), n);
         [Test, Performance]
         public void SortedDictionary_Remove_ref([Values(1, 100, 10000)] int n) => SortedDictRemoveCore(Src.Ints(n), Src.Refs(n), n);
+        [Test, Performance]
+        public void SortedDictionary_Remove_bool([Values(1, 100, 10000)] int n) => SortedDictRemoveCore(Src.Ints(n), Src.Bools(n), n);
 
         // ---- SortedDictionary this[k]=v (indexer set × M): O(log n), GC ~= 0 ----
         static void SortedDictSetCore<T>(int[] keys, T[] vals, int n)
@@ -451,6 +479,8 @@ namespace CollectionBenchmarks
         public void SortedDictionary_Set_val([Values(1, 100, 10000)] int n) => SortedDictSetCore(Src.Ints(n), Src.Vals(n), n);
         [Test, Performance]
         public void SortedDictionary_Set_ref([Values(1, 100, 10000)] int n) => SortedDictSetCore(Src.Ints(n), Src.Refs(n), n);
+        [Test, Performance]
+        public void SortedDictionary_Set_bool([Values(1, 100, 10000)] int n) => SortedDictSetCore(Src.Ints(n), Src.Bools(n), n);
 
         // ---- SortedDictionary TryGetValue × M: O(log n), GC ~= 0 ----
         static void SortedDictGetCore<T>(int[] keys, T[] vals, int n)
@@ -475,6 +505,8 @@ namespace CollectionBenchmarks
         public void SortedDictionary_Get_val([Values(1, 100, 10000)] int n) => SortedDictGetCore(Src.Ints(n), Src.Vals(n), n);
         [Test, Performance]
         public void SortedDictionary_Get_ref([Values(1, 100, 10000)] int n) => SortedDictGetCore(Src.Ints(n), Src.Refs(n), n);
+        [Test, Performance]
+        public void SortedDictionary_Get_bool([Values(1, 100, 10000)] int n) => SortedDictGetCore(Src.Ints(n), Src.Bools(n), n);
 
         // ---- SortedDictionary Iterate (foreach KVP, sorted): GC ~= 0 ----
         static void SortedDictIterateCore<T>(int[] keys, T[] vals, int n)
@@ -498,6 +530,8 @@ namespace CollectionBenchmarks
         public void SortedDictionary_Iterate_val([Values(1, 100, 10000)] int n) => SortedDictIterateCore(Src.Ints(n), Src.Vals(n), n);
         [Test, Performance]
         public void SortedDictionary_Iterate_ref([Values(1, 100, 10000)] int n) => SortedDictIterateCore(Src.Ints(n), Src.Refs(n), n);
+        [Test, Performance]
+        public void SortedDictionary_Iterate_bool([Values(1, 100, 10000)] int n) => SortedDictIterateCore(Src.Ints(n), Src.Bools(n), n);
 
         // =======================================================================
         // SortedSet<T>  — red-black tree set (element is key)
@@ -612,6 +646,8 @@ namespace CollectionBenchmarks
         public void SortedList_Add_val([Values(1, 100, 10000)] int n) => SortedListAddCore(Src.Ints(n), Src.Vals(n), n);
         [Test, Performance]
         public void SortedList_Add_ref([Values(1, 100, 10000)] int n) => SortedListAddCore(Src.Ints(n), Src.Refs(n), n);
+        [Test, Performance]
+        public void SortedList_Add_bool([Values(1, 100, 10000)] int n) => SortedListAddCore(Src.Ints(n), Src.Bools(n), n);
 
         // ---- SortedList Remove(k) × M (destructive, rebuild in setup) ----
         static void SortedListRemoveCore<T>(int[] keys, T[] vals, int n)
@@ -637,6 +673,8 @@ namespace CollectionBenchmarks
         public void SortedList_Remove_val([Values(1, 100, 10000)] int n) => SortedListRemoveCore(Src.Ints(n), Src.Vals(n), n);
         [Test, Performance]
         public void SortedList_Remove_ref([Values(1, 100, 10000)] int n) => SortedListRemoveCore(Src.Ints(n), Src.Refs(n), n);
+        [Test, Performance]
+        public void SortedList_Remove_bool([Values(1, 100, 10000)] int n) => SortedListRemoveCore(Src.Ints(n), Src.Bools(n), n);
 
         // ---- SortedList this[k]=v (indexer set × M, existing keys): O(log n), GC ~= 0 ----
         static void SortedListSetCore<T>(int[] keys, T[] vals, int n)
@@ -658,6 +696,8 @@ namespace CollectionBenchmarks
         public void SortedList_Set_val([Values(1, 100, 10000)] int n) => SortedListSetCore(Src.Ints(n), Src.Vals(n), n);
         [Test, Performance]
         public void SortedList_Set_ref([Values(1, 100, 10000)] int n) => SortedListSetCore(Src.Ints(n), Src.Refs(n), n);
+        [Test, Performance]
+        public void SortedList_Set_bool([Values(1, 100, 10000)] int n) => SortedListSetCore(Src.Ints(n), Src.Bools(n), n);
 
         // ---- SortedList TryGetValue × M: O(log n) binary search, GC ~= 0 ----
         static void SortedListGetCore<T>(int[] keys, T[] vals, int n)
@@ -682,6 +722,8 @@ namespace CollectionBenchmarks
         public void SortedList_Get_val([Values(1, 100, 10000)] int n) => SortedListGetCore(Src.Ints(n), Src.Vals(n), n);
         [Test, Performance]
         public void SortedList_Get_ref([Values(1, 100, 10000)] int n) => SortedListGetCore(Src.Ints(n), Src.Refs(n), n);
+        [Test, Performance]
+        public void SortedList_Get_bool([Values(1, 100, 10000)] int n) => SortedListGetCore(Src.Ints(n), Src.Bools(n), n);
 
         // ---- SortedList Iterate (foreach KVP, sorted): GC ~= 0 ----
         static void SortedListIterateCore<T>(int[] keys, T[] vals, int n)
@@ -705,6 +747,8 @@ namespace CollectionBenchmarks
         public void SortedList_Iterate_val([Values(1, 100, 10000)] int n) => SortedListIterateCore(Src.Ints(n), Src.Vals(n), n);
         [Test, Performance]
         public void SortedList_Iterate_ref([Values(1, 100, 10000)] int n) => SortedListIterateCore(Src.Ints(n), Src.Refs(n), n);
+        [Test, Performance]
+        public void SortedList_Iterate_bool([Values(1, 100, 10000)] int n) => SortedListIterateCore(Src.Ints(n), Src.Bools(n), n);
 
         // =======================================================================
         // LinkedList<T>  — doubly linked list
@@ -729,6 +773,8 @@ namespace CollectionBenchmarks
         public void LinkedList_Add_val([Values(1, 100, 10000)] int n) => LinkedListAddLastCore(Src.Vals(n), n);
         [Test, Performance]
         public void LinkedList_Add_ref([Values(1, 100, 10000)] int n) => LinkedListAddLastCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void LinkedList_Add_bool([Values(1, 100, 10000)] int n) => LinkedListAddLastCore(Src.Bools(n), n);
 
         // ---- LinkedList AddFirst (head build to N): O(1) per add, node alloc GC > 0 ----
         static void LinkedListAddFirstCore<T>(T[] src, int n)
@@ -749,6 +795,8 @@ namespace CollectionBenchmarks
         public void LinkedList_AddFirst_val([Values(1, 100, 10000)] int n) => LinkedListAddFirstCore(Src.Vals(n), n);
         [Test, Performance]
         public void LinkedList_AddFirst_ref([Values(1, 100, 10000)] int n) => LinkedListAddFirstCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void LinkedList_AddFirst_bool([Values(1, 100, 10000)] int n) => LinkedListAddFirstCore(Src.Bools(n), n);
 
         // ---- LinkedList RemoveFirst (drain to empty): destructive, rebuild in setup ----
         static void LinkedListRemoveCore<T>(T[] src, int n)
@@ -769,6 +817,8 @@ namespace CollectionBenchmarks
         public void LinkedList_Remove_val([Values(1, 100, 10000)] int n) => LinkedListRemoveCore(Src.Vals(n), n);
         [Test, Performance]
         public void LinkedList_Remove_ref([Values(1, 100, 10000)] int n) => LinkedListRemoveCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void LinkedList_Remove_bool([Values(1, 100, 10000)] int n) => LinkedListRemoveCore(Src.Bools(n), n);
 
         // ---- LinkedList Contains (linear O(n) scan × LinearScanCount): GC ~= 0 ----
         static void LinkedListContainsCore<T>(T[] src, int n)
@@ -792,6 +842,8 @@ namespace CollectionBenchmarks
         public void LinkedList_Contains_val([Values(1, 100, 10000)] int n) => LinkedListContainsCore(Src.Vals(n), n);
         [Test, Performance]
         public void LinkedList_Contains_ref([Values(1, 100, 10000)] int n) => LinkedListContainsCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void LinkedList_Contains_bool([Values(1, 100, 10000)] int n) => LinkedListContainsCore(Src.Bools(n), n);
 
         // ---- LinkedList Iterate (foreach full): GC ~= 0 ----
         static void LinkedListIterateCore<T>(T[] src, int n)
@@ -814,6 +866,8 @@ namespace CollectionBenchmarks
         public void LinkedList_Iterate_val([Values(1, 100, 10000)] int n) => LinkedListIterateCore(Src.Vals(n), n);
         [Test, Performance]
         public void LinkedList_Iterate_ref([Values(1, 100, 10000)] int n) => LinkedListIterateCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void LinkedList_Iterate_bool([Values(1, 100, 10000)] int n) => LinkedListIterateCore(Src.Bools(n), n);
 
         // =======================================================================
         // Queue<T>  — FIFO
@@ -838,6 +892,8 @@ namespace CollectionBenchmarks
         public void Queue_Add_val([Values(1, 100, 10000)] int n) => QueueEnqueueCore(Src.Vals(n), n);
         [Test, Performance]
         public void Queue_Add_ref([Values(1, 100, 10000)] int n) => QueueEnqueueCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void Queue_Add_bool([Values(1, 100, 10000)] int n) => QueueEnqueueCore(Src.Bools(n), n);
 
         // ---- Queue Dequeue (drain to empty): destructive, rebuild in setup ----
         static void QueueDequeueCore<T>(T[] src, int n)
@@ -858,6 +914,8 @@ namespace CollectionBenchmarks
         public void Queue_Remove_val([Values(1, 100, 10000)] int n) => QueueDequeueCore(Src.Vals(n), n);
         [Test, Performance]
         public void Queue_Remove_ref([Values(1, 100, 10000)] int n) => QueueDequeueCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void Queue_Remove_bool([Values(1, 100, 10000)] int n) => QueueDequeueCore(Src.Bools(n), n);
 
         // ---- Queue Peek + Contains (linear scan × LinearScanCount): GC ~= 0 ----
         static void QueuePeekContainsCore<T>(T[] src, int n)
@@ -883,6 +941,8 @@ namespace CollectionBenchmarks
         public void Queue_Contains_val([Values(1, 100, 10000)] int n) => QueuePeekContainsCore(Src.Vals(n), n);
         [Test, Performance]
         public void Queue_Contains_ref([Values(1, 100, 10000)] int n) => QueuePeekContainsCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void Queue_Contains_bool([Values(1, 100, 10000)] int n) => QueuePeekContainsCore(Src.Bools(n), n);
 
         // ---- Queue Iterate (foreach full): GC ~= 0 ----
         static void QueueIterateCore<T>(T[] src, int n)
@@ -905,6 +965,8 @@ namespace CollectionBenchmarks
         public void Queue_Iterate_val([Values(1, 100, 10000)] int n) => QueueIterateCore(Src.Vals(n), n);
         [Test, Performance]
         public void Queue_Iterate_ref([Values(1, 100, 10000)] int n) => QueueIterateCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void Queue_Iterate_bool([Values(1, 100, 10000)] int n) => QueueIterateCore(Src.Bools(n), n);
 
         // =======================================================================
         // Stack<T>  — LIFO
@@ -929,6 +991,8 @@ namespace CollectionBenchmarks
         public void Stack_Add_val([Values(1, 100, 10000)] int n) => StackPushCore(Src.Vals(n), n);
         [Test, Performance]
         public void Stack_Add_ref([Values(1, 100, 10000)] int n) => StackPushCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void Stack_Add_bool([Values(1, 100, 10000)] int n) => StackPushCore(Src.Bools(n), n);
 
         // ---- Stack Pop (drain to empty): destructive, rebuild in setup ----
         static void StackPopCore<T>(T[] src, int n)
@@ -949,6 +1013,8 @@ namespace CollectionBenchmarks
         public void Stack_Remove_val([Values(1, 100, 10000)] int n) => StackPopCore(Src.Vals(n), n);
         [Test, Performance]
         public void Stack_Remove_ref([Values(1, 100, 10000)] int n) => StackPopCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void Stack_Remove_bool([Values(1, 100, 10000)] int n) => StackPopCore(Src.Bools(n), n);
 
         // ---- Stack Peek + Contains (linear scan × LinearScanCount): GC ~= 0 ----
         static void StackPeekContainsCore<T>(T[] src, int n)
@@ -974,6 +1040,8 @@ namespace CollectionBenchmarks
         public void Stack_Contains_val([Values(1, 100, 10000)] int n) => StackPeekContainsCore(Src.Vals(n), n);
         [Test, Performance]
         public void Stack_Contains_ref([Values(1, 100, 10000)] int n) => StackPeekContainsCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void Stack_Contains_bool([Values(1, 100, 10000)] int n) => StackPeekContainsCore(Src.Bools(n), n);
 
         // ---- Stack Iterate (foreach full): GC ~= 0 ----
         static void StackIterateCore<T>(T[] src, int n)
@@ -996,6 +1064,8 @@ namespace CollectionBenchmarks
         public void Stack_Iterate_val([Values(1, 100, 10000)] int n) => StackIterateCore(Src.Vals(n), n);
         [Test, Performance]
         public void Stack_Iterate_ref([Values(1, 100, 10000)] int n) => StackIterateCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void Stack_Iterate_bool([Values(1, 100, 10000)] int n) => StackIterateCore(Src.Bools(n), n);
 
         // =======================================================================
         // T[]  — managed array (key name: Array). Only set/get-by-index + iterate.
@@ -1021,6 +1091,8 @@ namespace CollectionBenchmarks
         public void Array_Set_val([Values(1, 100, 10000)] int n) => ArraySetCore(Src.Vals(n), n);
         [Test, Performance]
         public void Array_Set_ref([Values(1, 100, 10000)] int n) => ArraySetCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void Array_Set_bool([Values(1, 100, 10000)] int n) => ArraySetCore(Src.Bools(n), n);
 
         // ---- Array this[i] (indexer get × M): O(1) read, GC ~= 0 ----
         static void ArrayGetCore<T>(T[] src, int n)
@@ -1045,6 +1117,8 @@ namespace CollectionBenchmarks
         public void Array_Get_val([Values(1, 100, 10000)] int n) => ArrayGetCore(Src.Vals(n), n);
         [Test, Performance]
         public void Array_Get_ref([Values(1, 100, 10000)] int n) => ArrayGetCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void Array_Get_bool([Values(1, 100, 10000)] int n) => ArrayGetCore(Src.Bools(n), n);
 
         // ---- Array Iterate (foreach full): GC ~= 0 ----
         static void ArrayIterateCore<T>(T[] src, int n)
@@ -1068,5 +1142,7 @@ namespace CollectionBenchmarks
         public void Array_Iterate_val([Values(1, 100, 10000)] int n) => ArrayIterateCore(Src.Vals(n), n);
         [Test, Performance]
         public void Array_Iterate_ref([Values(1, 100, 10000)] int n) => ArrayIterateCore(Src.Refs(n), n);
+        [Test, Performance]
+        public void Array_Iterate_bool([Values(1, 100, 10000)] int n) => ArrayIterateCore(Src.Bools(n), n);
     }
 }

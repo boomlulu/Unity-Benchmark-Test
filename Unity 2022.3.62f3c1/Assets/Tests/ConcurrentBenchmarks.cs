@@ -57,6 +57,10 @@ namespace CollectionBenchmarks
         public void ConcurrentDictionary_Add_ref([Values(1, 100, 10000)] int n)
             => Bench.MeasureTimeAndGcProducing(() => Dict_Add_Core(Src.Refs(n), n), n);
 
+        [Test, Performance]
+        public void ConcurrentDictionary_Add_bool([Values(1, 100, 10000)] int n)
+            => Bench.MeasureTimeAndGcProducing(() => Dict_Add_Core(Src.Bools(n), n), n);
+
         // ---- 删: TryRemove ×SubOp. Destructive -> rebuild full dict each measurement (not counted) ----
         static void Dict_Remove_Core<T>(T[] src, int n)
         {
@@ -91,6 +95,10 @@ namespace CollectionBenchmarks
         public void ConcurrentDictionary_Remove_ref([Values(1, 100, 10000)] int n)
             => Dict_Remove_Core(Src.Refs(n), n);
 
+        [Test, Performance]
+        public void ConcurrentDictionary_Remove_bool([Values(1, 100, 10000)] int n)
+            => Dict_Remove_Core(Src.Bools(n), n);
+
         // ---- 改: this[k]=v ×SubOp (overwrite existing keys). In-place, no growth -> GC ~= 0 ----
         static void Dict_Update_Core<T>(T[] src, int n)
         {
@@ -118,6 +126,10 @@ namespace CollectionBenchmarks
         [Test, Performance]
         public void ConcurrentDictionary_Update_ref([Values(1, 100, 10000)] int n)
             => Dict_Update_Core(Src.Refs(n), n);
+
+        [Test, Performance]
+        public void ConcurrentDictionary_Update_bool([Values(1, 100, 10000)] int n)
+            => Dict_Update_Core(Src.Bools(n), n);
 
         // ---- 查: TryGetValue ×SubOp. Pure lookups -> GC ~= 0 ----
         static void Dict_Get_Core<T>(T[] src, int n)
@@ -149,6 +161,10 @@ namespace CollectionBenchmarks
         public void ConcurrentDictionary_Get_ref([Values(1, 100, 10000)] int n)
             => Dict_Get_Core(Src.Refs(n), n);
 
+        [Test, Performance]
+        public void ConcurrentDictionary_Get_bool([Values(1, 100, 10000)] int n)
+            => Dict_Get_Core(Src.Bools(n), n);
+
         // ---- 遍历: foreach KVP full scan. ConcurrentDictionary enumerator is a snapshot-free
         //      struct walk -> GC ~= 0 ----
         static void Dict_Iterate_Core<T>(T[] src, int n)
@@ -178,6 +194,10 @@ namespace CollectionBenchmarks
         public void ConcurrentDictionary_Iterate_ref([Values(1, 100, 10000)] int n)
             => Dict_Iterate_Core(Src.Refs(n), n);
 
+        [Test, Performance]
+        public void ConcurrentDictionary_Iterate_bool([Values(1, 100, 10000)] int n)
+            => Dict_Iterate_Core(Src.Bools(n), n);
+
         // =====================================================================
         // ConcurrentQueue<T>
         // =====================================================================
@@ -201,6 +221,10 @@ namespace CollectionBenchmarks
         [Test, Performance]
         public void ConcurrentQueue_Add_ref([Values(1, 100, 10000)] int n)
             => Bench.MeasureTimeAndGcProducing(() => Queue_Add_Core(Src.Refs(n), n), n);
+
+        [Test, Performance]
+        public void ConcurrentQueue_Add_bool([Values(1, 100, 10000)] int n)
+            => Bench.MeasureTimeAndGcProducing(() => Queue_Add_Core(Src.Bools(n), n), n);
 
         // ---- 删: TryDequeue drain to empty. Destructive -> rebuild full queue each measurement ----
         static void Queue_Remove_Core<T>(T[] src, int n)
@@ -233,6 +257,10 @@ namespace CollectionBenchmarks
         [Test, Performance]
         public void ConcurrentQueue_Remove_ref([Values(1, 100, 10000)] int n)
             => Queue_Remove_Core(Src.Refs(n), n);
+
+        [Test, Performance]
+        public void ConcurrentQueue_Remove_bool([Values(1, 100, 10000)] int n)
+            => Queue_Remove_Core(Src.Bools(n), n);
 
         // ---- 查: TryPeek (head, O(1)) + foreach Contains-scan ×LinearScan (no random access on a
         //      queue, so membership is a linear walk; capped by LinearScanCount). GC ~= 0 ----
@@ -273,6 +301,10 @@ namespace CollectionBenchmarks
         public void ConcurrentQueue_Contains_ref([Values(1, 100, 10000)] int n)
             => Queue_Contains_Core(Src.Refs(n), n);
 
+        [Test, Performance]
+        public void ConcurrentQueue_Contains_bool([Values(1, 100, 10000)] int n)
+            => Queue_Contains_Core(Src.Bools(n), n);
+
         // ---- 遍历: foreach full scan (moment-in-time snapshot enumerator). GC ~= 0 in steady state ----
         static void Queue_Iterate_Core<T>(T[] src, int n)
         {
@@ -301,6 +333,10 @@ namespace CollectionBenchmarks
         public void ConcurrentQueue_Iterate_ref([Values(1, 100, 10000)] int n)
             => Queue_Iterate_Core(Src.Refs(n), n);
 
+        [Test, Performance]
+        public void ConcurrentQueue_Iterate_bool([Values(1, 100, 10000)] int n)
+            => Queue_Iterate_Core(Src.Bools(n), n);
+
         // =====================================================================
         // ConcurrentStack<T>
         // =====================================================================
@@ -324,6 +360,10 @@ namespace CollectionBenchmarks
         [Test, Performance]
         public void ConcurrentStack_Add_ref([Values(1, 100, 10000)] int n)
             => Bench.MeasureTimeAndGcProducing(() => Stack_Add_Core(Src.Refs(n), n), n);
+
+        [Test, Performance]
+        public void ConcurrentStack_Add_bool([Values(1, 100, 10000)] int n)
+            => Bench.MeasureTimeAndGcProducing(() => Stack_Add_Core(Src.Bools(n), n), n);
 
         // ---- 删: TryPop drain to empty. Destructive -> rebuild full stack each measurement ----
         static void Stack_Remove_Core<T>(T[] src, int n)
@@ -357,6 +397,10 @@ namespace CollectionBenchmarks
         public void ConcurrentStack_Remove_ref([Values(1, 100, 10000)] int n)
             => Stack_Remove_Core(Src.Refs(n), n);
 
+        [Test, Performance]
+        public void ConcurrentStack_Remove_bool([Values(1, 100, 10000)] int n)
+            => Stack_Remove_Core(Src.Bools(n), n);
+
         // ---- 查: TryPeek (top, O(1)). Pure lookup -> GC ~= 0 ----
         static void Stack_Peek_Core<T>(T[] src, int n)
         {
@@ -387,6 +431,10 @@ namespace CollectionBenchmarks
         public void ConcurrentStack_Peek_ref([Values(1, 100, 10000)] int n)
             => Stack_Peek_Core(Src.Refs(n), n);
 
+        [Test, Performance]
+        public void ConcurrentStack_Peek_bool([Values(1, 100, 10000)] int n)
+            => Stack_Peek_Core(Src.Bools(n), n);
+
         // ---- 遍历: foreach full scan (snapshot enumerator). GC ~= 0 in steady state ----
         static void Stack_Iterate_Core<T>(T[] src, int n)
         {
@@ -415,6 +463,10 @@ namespace CollectionBenchmarks
         public void ConcurrentStack_Iterate_ref([Values(1, 100, 10000)] int n)
             => Stack_Iterate_Core(Src.Refs(n), n);
 
+        [Test, Performance]
+        public void ConcurrentStack_Iterate_bool([Values(1, 100, 10000)] int n)
+            => Stack_Iterate_Core(Src.Bools(n), n);
+
         // =====================================================================
         // ConcurrentBag<T>  (unordered; no random 查, no 改)
         // =====================================================================
@@ -438,6 +490,10 @@ namespace CollectionBenchmarks
         [Test, Performance]
         public void ConcurrentBag_Add_ref([Values(1, 100, 10000)] int n)
             => Bench.MeasureTimeAndGcProducing(() => Bag_Add_Core(Src.Refs(n), n), n);
+
+        [Test, Performance]
+        public void ConcurrentBag_Add_bool([Values(1, 100, 10000)] int n)
+            => Bench.MeasureTimeAndGcProducing(() => Bag_Add_Core(Src.Bools(n), n), n);
 
         // ---- 删: TryTake drain to empty. Destructive -> rebuild full bag each measurement ----
         static void Bag_Remove_Core<T>(T[] src, int n)
@@ -471,6 +527,10 @@ namespace CollectionBenchmarks
         public void ConcurrentBag_Remove_ref([Values(1, 100, 10000)] int n)
             => Bag_Remove_Core(Src.Refs(n), n);
 
+        [Test, Performance]
+        public void ConcurrentBag_Remove_bool([Values(1, 100, 10000)] int n)
+            => Bag_Remove_Core(Src.Bools(n), n);
+
         // ---- 遍历: foreach full scan (snapshots all thread-local segments). GC ~= 0 in steady state ----
         static void Bag_Iterate_Core<T>(T[] src, int n)
         {
@@ -498,6 +558,10 @@ namespace CollectionBenchmarks
         [Test, Performance]
         public void ConcurrentBag_Iterate_ref([Values(1, 100, 10000)] int n)
             => Bag_Iterate_Core(Src.Refs(n), n);
+
+        [Test, Performance]
+        public void ConcurrentBag_Iterate_bool([Values(1, 100, 10000)] int n)
+            => Bag_Iterate_Core(Src.Bools(n), n);
 
         // =====================================================================
         // BlockingCollection<T>  (default backing = ConcurrentQueue)
@@ -530,6 +594,10 @@ namespace CollectionBenchmarks
         [Test, Performance]
         public void BlockingCollection_Add_ref([Values(1, 100, 10000)] int n)
             => Blocking_Add_Core(Src.Refs(n), n);
+
+        [Test, Performance]
+        public void BlockingCollection_Add_bool([Values(1, 100, 10000)] int n)
+            => Blocking_Add_Core(Src.Bools(n), n);
 
         // ---- 删: Take drain to empty. Destructive -> setup rebuilds a fresh FULL collection each
         //      measurement, action drains exactly Count items (Take blocks at empty, so never past
@@ -566,6 +634,10 @@ namespace CollectionBenchmarks
         public void BlockingCollection_Remove_ref([Values(1, 100, 10000)] int n)
             => Blocking_Remove_Core(Src.Refs(n), n);
 
+        [Test, Performance]
+        public void BlockingCollection_Remove_bool([Values(1, 100, 10000)] int n)
+            => Blocking_Remove_Core(Src.Bools(n), n);
+
         // ---- 遍历: foreach over GetConsumingEnumerable? No — that drains. Use plain foreach which
         //      enumerates a snapshot without consuming. setup rebuilds a fresh FULL collection each
         //      measurement (so iterating never hits a disposed instance), action does a plain
@@ -599,5 +671,9 @@ namespace CollectionBenchmarks
         [Test, Performance]
         public void BlockingCollection_Iterate_ref([Values(1, 100, 10000)] int n)
             => Blocking_Iterate_Core(Src.Refs(n), n);
+
+        [Test, Performance]
+        public void BlockingCollection_Iterate_bool([Values(1, 100, 10000)] int n)
+            => Blocking_Iterate_Core(Src.Bools(n), n);
     }
 }

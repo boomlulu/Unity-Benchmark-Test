@@ -256,6 +256,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableArray_Build_ref_N1() { const int n = 1; var s = Src.Refs(n); Bench.MeasureTimeAndGcProducing(() => ArrayBuild(s, n), n); }
         [Test, Performance] public void ImmutableArray_Build_ref_N100() { const int n = 100; var s = Src.Refs(n); Bench.MeasureTimeAndGcProducing(() => ArrayBuild(s, n), n); }
         [Test, Performance] public void ImmutableArray_Build_ref_N10000() { const int n = 10000; var s = Src.Refs(n); Bench.MeasureTimeAndGcProducing(() => ArrayBuild(s, n), n); }
+        [Test, Performance] public void ImmutableArray_Build_bool_N1() { const int n = 1; var s = Src.Bools(n); Bench.MeasureTimeAndGcProducing(() => ArrayBuild(s, n), n); }
+        [Test, Performance] public void ImmutableArray_Build_bool_N100() { const int n = 100; var s = Src.Bools(n); Bench.MeasureTimeAndGcProducing(() => ArrayBuild(s, n), n); }
+        [Test, Performance] public void ImmutableArray_Build_bool_N10000() { const int n = 10000; var s = Src.Bools(n); Bench.MeasureTimeAndGcProducing(() => ArrayBuild(s, n), n); }
 
         // ---- 增单次 AddOne (one .Add on size-N -> new instance; full O(n) array copy) ----
         [Test, Performance] public void ImmutableArray_AddOne_int_N1() { const int n = 1; var b = ImmutableArray.Create(Src.Ints(n)); Bench.MeasureTimeAndGcProducing(() => ArrayAddOne(b, 999999), n); }
@@ -267,6 +270,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableArray_AddOne_ref_N1() { const int n = 1; var b = ImmutableArray.Create(Src.Refs(n)); Bench.MeasureTimeAndGcProducing(() => ArrayAddOne(b, new RefElem(999999)), n); }
         [Test, Performance] public void ImmutableArray_AddOne_ref_N100() { const int n = 100; var b = ImmutableArray.Create(Src.Refs(n)); Bench.MeasureTimeAndGcProducing(() => ArrayAddOne(b, new RefElem(999999)), n); }
         [Test, Performance] public void ImmutableArray_AddOne_ref_N10000() { const int n = 10000; var b = ImmutableArray.Create(Src.Refs(n)); Bench.MeasureTimeAndGcProducing(() => ArrayAddOne(b, new RefElem(999999)), n); }
+        [Test, Performance] public void ImmutableArray_AddOne_bool_N1() { const int n = 1; var b = ImmutableArray.Create(Src.Bools(n)); Bench.MeasureTimeAndGcProducing(() => ArrayAddOne(b, true), n); }
+        [Test, Performance] public void ImmutableArray_AddOne_bool_N100() { const int n = 100; var b = ImmutableArray.Create(Src.Bools(n)); Bench.MeasureTimeAndGcProducing(() => ArrayAddOne(b, true), n); }
+        [Test, Performance] public void ImmutableArray_AddOne_bool_N10000() { const int n = 10000; var b = ImmutableArray.Create(Src.Bools(n)); Bench.MeasureTimeAndGcProducing(() => ArrayAddOne(b, true), n); }
 
         // ---- 删 RemoveAt (single -> new instance; O(n) array copy) ----
         [Test, Performance] public void ImmutableArray_RemoveAt_int_N1() { const int n = 1; var b = ImmutableArray.Create(Src.Ints(n)); Bench.MeasureTimeAndGcProducing(() => ArrayRemoveAt(b, 0), n); }
@@ -278,6 +284,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableArray_RemoveAt_ref_N1() { const int n = 1; var b = ImmutableArray.Create(Src.Refs(n)); Bench.MeasureTimeAndGcProducing(() => ArrayRemoveAt(b, 0), n); }
         [Test, Performance] public void ImmutableArray_RemoveAt_ref_N100() { const int n = 100; var b = ImmutableArray.Create(Src.Refs(n)); Bench.MeasureTimeAndGcProducing(() => ArrayRemoveAt(b, n / 2), n); }
         [Test, Performance] public void ImmutableArray_RemoveAt_ref_N10000() { const int n = 10000; var b = ImmutableArray.Create(Src.Refs(n)); Bench.MeasureTimeAndGcProducing(() => ArrayRemoveAt(b, n / 2), n); }
+        [Test, Performance] public void ImmutableArray_RemoveAt_bool_N1() { const int n = 1; var b = ImmutableArray.Create(Src.Bools(n)); Bench.MeasureTimeAndGcProducing(() => ArrayRemoveAt(b, 0), n); }
+        [Test, Performance] public void ImmutableArray_RemoveAt_bool_N100() { const int n = 100; var b = ImmutableArray.Create(Src.Bools(n)); Bench.MeasureTimeAndGcProducing(() => ArrayRemoveAt(b, n / 2), n); }
+        [Test, Performance] public void ImmutableArray_RemoveAt_bool_N10000() { const int n = 10000; var b = ImmutableArray.Create(Src.Bools(n)); Bench.MeasureTimeAndGcProducing(() => ArrayRemoveAt(b, n / 2), n); }
 
         // ---- 改 SetItem (single -> new instance; O(n) array copy) ----
         [Test, Performance] public void ImmutableArray_SetItem_int_N1() { const int n = 1; var b = ImmutableArray.Create(Src.Ints(n)); Bench.MeasureTimeAndGcProducing(() => ArraySetItem(b, 0, 777), n); }
@@ -289,6 +298,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableArray_SetItem_ref_N1() { const int n = 1; var b = ImmutableArray.Create(Src.Refs(n)); Bench.MeasureTimeAndGcProducing(() => ArraySetItem(b, 0, new RefElem(777)), n); }
         [Test, Performance] public void ImmutableArray_SetItem_ref_N100() { const int n = 100; var b = ImmutableArray.Create(Src.Refs(n)); Bench.MeasureTimeAndGcProducing(() => ArraySetItem(b, n / 2, new RefElem(777)), n); }
         [Test, Performance] public void ImmutableArray_SetItem_ref_N10000() { const int n = 10000; var b = ImmutableArray.Create(Src.Refs(n)); Bench.MeasureTimeAndGcProducing(() => ArraySetItem(b, n / 2, new RefElem(777)), n); }
+        [Test, Performance] public void ImmutableArray_SetItem_bool_N1() { const int n = 1; var b = ImmutableArray.Create(Src.Bools(n)); Bench.MeasureTimeAndGcProducing(() => ArraySetItem(b, 0, true), n); }
+        [Test, Performance] public void ImmutableArray_SetItem_bool_N100() { const int n = 100; var b = ImmutableArray.Create(Src.Bools(n)); Bench.MeasureTimeAndGcProducing(() => ArraySetItem(b, n / 2, true), n); }
+        [Test, Performance] public void ImmutableArray_SetItem_bool_N10000() { const int n = 10000; var b = ImmutableArray.Create(Src.Bools(n)); Bench.MeasureTimeAndGcProducing(() => ArraySetItem(b, n / 2, true), n); }
 
         // ---- 查 Index (this[i] x SubOp; in-place, GC ~= 0) ----
         [Test, Performance] public void ImmutableArray_Index_int_N1() { const int n = 1; var a = ImmutableArray.Create(Src.Ints(n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayIndexScan(a, m), null, () => Sink(sink), n); }
@@ -300,6 +312,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableArray_Index_ref_N1() { const int n = 1; var a = ImmutableArray.Create(Src.Refs(n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayIndexScan(a, m), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableArray_Index_ref_N100() { const int n = 100; var a = ImmutableArray.Create(Src.Refs(n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayIndexScan(a, m), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableArray_Index_ref_N10000() { const int n = 10000; var a = ImmutableArray.Create(Src.Refs(n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayIndexScan(a, m), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableArray_Index_bool_N1() { const int n = 1; var a = ImmutableArray.Create(Src.Bools(n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayIndexScan(a, m), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableArray_Index_bool_N100() { const int n = 100; var a = ImmutableArray.Create(Src.Bools(n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayIndexScan(a, m), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableArray_Index_bool_N10000() { const int n = 10000; var a = ImmutableArray.Create(Src.Bools(n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayIndexScan(a, m), null, () => Sink(sink), n); }
 
         // ---- 查 Contains (linear scan x LinearScanCount; in-place, GC ~= 0) ----
         [Test, Performance] public void ImmutableArray_Contains_int_N1() { const int n = 1; var s = Src.Ints(n); var a = ImmutableArray.Create(s); int m = Bench.LinearScanCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayContainsScan(a, s, m), null, () => Sink(sink), n); }
@@ -311,6 +326,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableArray_Contains_ref_N1() { const int n = 1; var s = Src.Refs(n); var a = ImmutableArray.Create(s); int m = Bench.LinearScanCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayContainsScan(a, s, m), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableArray_Contains_ref_N100() { const int n = 100; var s = Src.Refs(n); var a = ImmutableArray.Create(s); int m = Bench.LinearScanCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayContainsScan(a, s, m), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableArray_Contains_ref_N10000() { const int n = 10000; var s = Src.Refs(n); var a = ImmutableArray.Create(s); int m = Bench.LinearScanCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayContainsScan(a, s, m), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableArray_Contains_bool_N1() { const int n = 1; var s = Src.Bools(n); var a = ImmutableArray.Create(s); int m = Bench.LinearScanCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayContainsScan(a, s, m), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableArray_Contains_bool_N100() { const int n = 100; var s = Src.Bools(n); var a = ImmutableArray.Create(s); int m = Bench.LinearScanCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayContainsScan(a, s, m), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableArray_Contains_bool_N10000() { const int n = 10000; var s = Src.Bools(n); var a = ImmutableArray.Create(s); int m = Bench.LinearScanCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayContainsScan(a, s, m), null, () => Sink(sink), n); }
 
         // ---- 遍历 Iterate (foreach full; in-place, GC ~= 0) ----
         [Test, Performance] public void ImmutableArray_Iterate_int_N1() { const int n = 1; var a = ImmutableArray.Create(Src.Ints(n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayIterate(a), null, () => Sink(sink), n); }
@@ -322,6 +340,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableArray_Iterate_ref_N1() { const int n = 1; var a = ImmutableArray.Create(Src.Refs(n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayIterate(a), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableArray_Iterate_ref_N100() { const int n = 100; var a = ImmutableArray.Create(Src.Refs(n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayIterate(a), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableArray_Iterate_ref_N10000() { const int n = 10000; var a = ImmutableArray.Create(Src.Refs(n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayIterate(a), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableArray_Iterate_bool_N1() { const int n = 1; var a = ImmutableArray.Create(Src.Bools(n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayIterate(a), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableArray_Iterate_bool_N100() { const int n = 100; var a = ImmutableArray.Create(Src.Bools(n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayIterate(a), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableArray_Iterate_bool_N10000() { const int n = 10000; var a = ImmutableArray.Create(Src.Bools(n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += ArrayIterate(a), null, () => Sink(sink), n); }
 
         // ====================================================================
         // ImmutableList<T> (AVL tree)
@@ -339,6 +360,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableList_Build_ref_N1() { const int n = 1; var s = Src.Refs(n); Bench.MeasureTimeAndGcProducing(() => ListBuild(s, n), n); }
         [Test, Performance] public void ImmutableList_Build_ref_N100() { const int n = 100; var s = Src.Refs(n); Bench.MeasureTimeAndGcProducing(() => ListBuild(s, n), n); }
         [Test, Performance] public void ImmutableList_Build_ref_N10000() { const int n = 10000; var s = Src.Refs(n); Bench.MeasureTimeAndGcProducing(() => ListBuild(s, n), n); }
+        [Test, Performance] public void ImmutableList_Build_bool_N1() { const int n = 1; var s = Src.Bools(n); Bench.MeasureTimeAndGcProducing(() => ListBuild(s, n), n); }
+        [Test, Performance] public void ImmutableList_Build_bool_N100() { const int n = 100; var s = Src.Bools(n); Bench.MeasureTimeAndGcProducing(() => ListBuild(s, n), n); }
+        [Test, Performance] public void ImmutableList_Build_bool_N10000() { const int n = 10000; var s = Src.Bools(n); Bench.MeasureTimeAndGcProducing(() => ListBuild(s, n), n); }
 
         // ---- 增单次 AddOne (O(log n) path-copy of AVL spine) ----
         [Test, Performance] public void ImmutableList_AddOne_int_N1() { const int n = 1; var b = ImmutableList.CreateRange(Src.Ints(n)); Bench.MeasureTimeAndGcProducing(() => ListAddOne(b, 999999), n); }
@@ -350,6 +374,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableList_AddOne_ref_N1() { const int n = 1; var b = ImmutableList.CreateRange(Src.Refs(n)); Bench.MeasureTimeAndGcProducing(() => ListAddOne(b, new RefElem(999999)), n); }
         [Test, Performance] public void ImmutableList_AddOne_ref_N100() { const int n = 100; var b = ImmutableList.CreateRange(Src.Refs(n)); Bench.MeasureTimeAndGcProducing(() => ListAddOne(b, new RefElem(999999)), n); }
         [Test, Performance] public void ImmutableList_AddOne_ref_N10000() { const int n = 10000; var b = ImmutableList.CreateRange(Src.Refs(n)); Bench.MeasureTimeAndGcProducing(() => ListAddOne(b, new RefElem(999999)), n); }
+        [Test, Performance] public void ImmutableList_AddOne_bool_N1() { const int n = 1; var b = ImmutableList.CreateRange(Src.Bools(n)); Bench.MeasureTimeAndGcProducing(() => ListAddOne(b, true), n); }
+        [Test, Performance] public void ImmutableList_AddOne_bool_N100() { const int n = 100; var b = ImmutableList.CreateRange(Src.Bools(n)); Bench.MeasureTimeAndGcProducing(() => ListAddOne(b, true), n); }
+        [Test, Performance] public void ImmutableList_AddOne_bool_N10000() { const int n = 10000; var b = ImmutableList.CreateRange(Src.Bools(n)); Bench.MeasureTimeAndGcProducing(() => ListAddOne(b, true), n); }
 
         // ---- 删 Remove (single value -> new instance; O(log n) path-copy) ----
         [Test, Performance] public void ImmutableList_Remove_int_N1() { const int n = 1; var src = Src.Ints(n); var b = ImmutableList.CreateRange(src); Bench.MeasureTimeAndGcProducing(() => ListRemove(b, src[0]), n); }
@@ -361,6 +388,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableList_Remove_ref_N1() { const int n = 1; var src = Src.Refs(n); var b = ImmutableList.CreateRange(src); Bench.MeasureTimeAndGcProducing(() => ListRemove(b, src[0]), n); }
         [Test, Performance] public void ImmutableList_Remove_ref_N100() { const int n = 100; var src = Src.Refs(n); var b = ImmutableList.CreateRange(src); Bench.MeasureTimeAndGcProducing(() => ListRemove(b, src[n / 2]), n); }
         [Test, Performance] public void ImmutableList_Remove_ref_N10000() { const int n = 10000; var src = Src.Refs(n); var b = ImmutableList.CreateRange(src); Bench.MeasureTimeAndGcProducing(() => ListRemove(b, src[n / 2]), n); }
+        [Test, Performance] public void ImmutableList_Remove_bool_N1() { const int n = 1; var src = Src.Bools(n); var b = ImmutableList.CreateRange(src); Bench.MeasureTimeAndGcProducing(() => ListRemove(b, src[0]), n); }
+        [Test, Performance] public void ImmutableList_Remove_bool_N100() { const int n = 100; var src = Src.Bools(n); var b = ImmutableList.CreateRange(src); Bench.MeasureTimeAndGcProducing(() => ListRemove(b, src[n / 2]), n); }
+        [Test, Performance] public void ImmutableList_Remove_bool_N10000() { const int n = 10000; var src = Src.Bools(n); var b = ImmutableList.CreateRange(src); Bench.MeasureTimeAndGcProducing(() => ListRemove(b, src[n / 2]), n); }
 
         // ---- 改 SetItem (single -> new instance; O(log n) path-copy) ----
         [Test, Performance] public void ImmutableList_SetItem_int_N1() { const int n = 1; var b = ImmutableList.CreateRange(Src.Ints(n)); Bench.MeasureTimeAndGcProducing(() => ListSetItem(b, 0, 777), n); }
@@ -372,6 +402,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableList_SetItem_ref_N1() { const int n = 1; var b = ImmutableList.CreateRange(Src.Refs(n)); Bench.MeasureTimeAndGcProducing(() => ListSetItem(b, 0, new RefElem(777)), n); }
         [Test, Performance] public void ImmutableList_SetItem_ref_N100() { const int n = 100; var b = ImmutableList.CreateRange(Src.Refs(n)); Bench.MeasureTimeAndGcProducing(() => ListSetItem(b, n / 2, new RefElem(777)), n); }
         [Test, Performance] public void ImmutableList_SetItem_ref_N10000() { const int n = 10000; var b = ImmutableList.CreateRange(Src.Refs(n)); Bench.MeasureTimeAndGcProducing(() => ListSetItem(b, n / 2, new RefElem(777)), n); }
+        [Test, Performance] public void ImmutableList_SetItem_bool_N1() { const int n = 1; var b = ImmutableList.CreateRange(Src.Bools(n)); Bench.MeasureTimeAndGcProducing(() => ListSetItem(b, 0, true), n); }
+        [Test, Performance] public void ImmutableList_SetItem_bool_N100() { const int n = 100; var b = ImmutableList.CreateRange(Src.Bools(n)); Bench.MeasureTimeAndGcProducing(() => ListSetItem(b, n / 2, true), n); }
+        [Test, Performance] public void ImmutableList_SetItem_bool_N10000() { const int n = 10000; var b = ImmutableList.CreateRange(Src.Bools(n)); Bench.MeasureTimeAndGcProducing(() => ListSetItem(b, n / 2, true), n); }
 
         // ---- 查 Index (this[i] O(log n) x SubOp; in-place, GC ~= 0) ----
         [Test, Performance] public void ImmutableList_Index_int_N1() { const int n = 1; var l = ImmutableList.CreateRange(Src.Ints(n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ListIndexScan(l, m), null, () => Sink(sink), n); }
@@ -383,6 +416,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableList_Index_ref_N1() { const int n = 1; var l = ImmutableList.CreateRange(Src.Refs(n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ListIndexScan(l, m), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableList_Index_ref_N100() { const int n = 100; var l = ImmutableList.CreateRange(Src.Refs(n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ListIndexScan(l, m), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableList_Index_ref_N10000() { const int n = 10000; var l = ImmutableList.CreateRange(Src.Refs(n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ListIndexScan(l, m), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableList_Index_bool_N1() { const int n = 1; var l = ImmutableList.CreateRange(Src.Bools(n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ListIndexScan(l, m), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableList_Index_bool_N100() { const int n = 100; var l = ImmutableList.CreateRange(Src.Bools(n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ListIndexScan(l, m), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableList_Index_bool_N10000() { const int n = 10000; var l = ImmutableList.CreateRange(Src.Bools(n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ListIndexScan(l, m), null, () => Sink(sink), n); }
 
         // ---- 查 Contains (O(n) linear scan x LinearScanCount; in-place, GC ~= 0) ----
         [Test, Performance] public void ImmutableList_Contains_int_N1() { const int n = 1; var s = Src.Ints(n); var l = ImmutableList.CreateRange(s); int m = Bench.LinearScanCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ListContainsScan(l, s, m), null, () => Sink(sink), n); }
@@ -394,6 +430,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableList_Contains_ref_N1() { const int n = 1; var s = Src.Refs(n); var l = ImmutableList.CreateRange(s); int m = Bench.LinearScanCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ListContainsScan(l, s, m), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableList_Contains_ref_N100() { const int n = 100; var s = Src.Refs(n); var l = ImmutableList.CreateRange(s); int m = Bench.LinearScanCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ListContainsScan(l, s, m), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableList_Contains_ref_N10000() { const int n = 10000; var s = Src.Refs(n); var l = ImmutableList.CreateRange(s); int m = Bench.LinearScanCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ListContainsScan(l, s, m), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableList_Contains_bool_N1() { const int n = 1; var s = Src.Bools(n); var l = ImmutableList.CreateRange(s); int m = Bench.LinearScanCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ListContainsScan(l, s, m), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableList_Contains_bool_N100() { const int n = 100; var s = Src.Bools(n); var l = ImmutableList.CreateRange(s); int m = Bench.LinearScanCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ListContainsScan(l, s, m), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableList_Contains_bool_N10000() { const int n = 10000; var s = Src.Bools(n); var l = ImmutableList.CreateRange(s); int m = Bench.LinearScanCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += ListContainsScan(l, s, m), null, () => Sink(sink), n); }
 
         // ---- 遍历 Iterate ----
         [Test, Performance] public void ImmutableList_Iterate_int_N1() { const int n = 1; var l = ImmutableList.CreateRange(Src.Ints(n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += ListIterate(l), null, () => Sink(sink), n); }
@@ -405,6 +444,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableList_Iterate_ref_N1() { const int n = 1; var l = ImmutableList.CreateRange(Src.Refs(n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += ListIterate(l), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableList_Iterate_ref_N100() { const int n = 100; var l = ImmutableList.CreateRange(Src.Refs(n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += ListIterate(l), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableList_Iterate_ref_N10000() { const int n = 10000; var l = ImmutableList.CreateRange(Src.Refs(n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += ListIterate(l), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableList_Iterate_bool_N1() { const int n = 1; var l = ImmutableList.CreateRange(Src.Bools(n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += ListIterate(l), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableList_Iterate_bool_N100() { const int n = 100; var l = ImmutableList.CreateRange(Src.Bools(n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += ListIterate(l), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableList_Iterate_bool_N10000() { const int n = 10000; var l = ImmutableList.CreateRange(Src.Bools(n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += ListIterate(l), null, () => Sink(sink), n); }
 
         // ====================================================================
         // ImmutableDictionary<int,T> (hash AVL tree); key=int, value=elem
@@ -422,6 +464,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableDictionary_Build_ref_N1() { const int n = 1; var s = Src.Refs(n); Bench.MeasureTimeAndGcProducing(() => DictBuild(s, n), n); }
         [Test, Performance] public void ImmutableDictionary_Build_ref_N100() { const int n = 100; var s = Src.Refs(n); Bench.MeasureTimeAndGcProducing(() => DictBuild(s, n), n); }
         [Test, Performance] public void ImmutableDictionary_Build_ref_N10000() { const int n = 10000; var s = Src.Refs(n); Bench.MeasureTimeAndGcProducing(() => DictBuild(s, n), n); }
+        [Test, Performance] public void ImmutableDictionary_Build_bool_N1() { const int n = 1; var s = Src.Bools(n); Bench.MeasureTimeAndGcProducing(() => DictBuild(s, n), n); }
+        [Test, Performance] public void ImmutableDictionary_Build_bool_N100() { const int n = 100; var s = Src.Bools(n); Bench.MeasureTimeAndGcProducing(() => DictBuild(s, n), n); }
+        [Test, Performance] public void ImmutableDictionary_Build_bool_N10000() { const int n = 10000; var s = Src.Bools(n); Bench.MeasureTimeAndGcProducing(() => DictBuild(s, n), n); }
 
         // ---- 增单次 SetItemOne (new key -> O(log n) path-copy) ----
         [Test, Performance] public void ImmutableDictionary_SetItemOne_int_N1() { const int n = 1; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Ints(n), n)); Bench.MeasureTimeAndGcProducing(() => DictSetOne(b, n + 1, 999999), n); }
@@ -433,6 +478,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableDictionary_SetItemOne_ref_N1() { const int n = 1; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Refs(n), n)); Bench.MeasureTimeAndGcProducing(() => DictSetOne(b, n + 1, new RefElem(999999)), n); }
         [Test, Performance] public void ImmutableDictionary_SetItemOne_ref_N100() { const int n = 100; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Refs(n), n)); Bench.MeasureTimeAndGcProducing(() => DictSetOne(b, n + 1, new RefElem(999999)), n); }
         [Test, Performance] public void ImmutableDictionary_SetItemOne_ref_N10000() { const int n = 10000; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Refs(n), n)); Bench.MeasureTimeAndGcProducing(() => DictSetOne(b, n + 1, new RefElem(999999)), n); }
+        [Test, Performance] public void ImmutableDictionary_SetItemOne_bool_N1() { const int n = 1; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Bools(n), n)); Bench.MeasureTimeAndGcProducing(() => DictSetOne(b, n + 1, true), n); }
+        [Test, Performance] public void ImmutableDictionary_SetItemOne_bool_N100() { const int n = 100; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Bools(n), n)); Bench.MeasureTimeAndGcProducing(() => DictSetOne(b, n + 1, true), n); }
+        [Test, Performance] public void ImmutableDictionary_SetItemOne_bool_N10000() { const int n = 10000; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Bools(n), n)); Bench.MeasureTimeAndGcProducing(() => DictSetOne(b, n + 1, true), n); }
 
         // ---- 删 Remove (single key -> O(log n) path-copy) ----
         [Test, Performance] public void ImmutableDictionary_Remove_int_N1() { const int n = 1; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Ints(n), n)); Bench.MeasureTimeAndGcProducing(() => DictRemove(b, 0), n); }
@@ -444,6 +492,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableDictionary_Remove_ref_N1() { const int n = 1; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Refs(n), n)); Bench.MeasureTimeAndGcProducing(() => DictRemove(b, 0), n); }
         [Test, Performance] public void ImmutableDictionary_Remove_ref_N100() { const int n = 100; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Refs(n), n)); Bench.MeasureTimeAndGcProducing(() => DictRemove(b, n / 2), n); }
         [Test, Performance] public void ImmutableDictionary_Remove_ref_N10000() { const int n = 10000; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Refs(n), n)); Bench.MeasureTimeAndGcProducing(() => DictRemove(b, n / 2), n); }
+        [Test, Performance] public void ImmutableDictionary_Remove_bool_N1() { const int n = 1; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Bools(n), n)); Bench.MeasureTimeAndGcProducing(() => DictRemove(b, 0), n); }
+        [Test, Performance] public void ImmutableDictionary_Remove_bool_N100() { const int n = 100; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Bools(n), n)); Bench.MeasureTimeAndGcProducing(() => DictRemove(b, n / 2), n); }
+        [Test, Performance] public void ImmutableDictionary_Remove_bool_N10000() { const int n = 10000; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Bools(n), n)); Bench.MeasureTimeAndGcProducing(() => DictRemove(b, n / 2), n); }
 
         // ---- 改 SetItem (existing key -> new instance; O(log n) path-copy) ----
         [Test, Performance] public void ImmutableDictionary_SetItem_int_N1() { const int n = 1; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Ints(n), n)); Bench.MeasureTimeAndGcProducing(() => DictSetOne(b, 0, 777), n); }
@@ -455,6 +506,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableDictionary_SetItem_ref_N1() { const int n = 1; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Refs(n), n)); Bench.MeasureTimeAndGcProducing(() => DictSetOne(b, 0, new RefElem(777)), n); }
         [Test, Performance] public void ImmutableDictionary_SetItem_ref_N100() { const int n = 100; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Refs(n), n)); Bench.MeasureTimeAndGcProducing(() => DictSetOne(b, n / 2, new RefElem(777)), n); }
         [Test, Performance] public void ImmutableDictionary_SetItem_ref_N10000() { const int n = 10000; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Refs(n), n)); Bench.MeasureTimeAndGcProducing(() => DictSetOne(b, n / 2, new RefElem(777)), n); }
+        [Test, Performance] public void ImmutableDictionary_SetItem_bool_N1() { const int n = 1; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Bools(n), n)); Bench.MeasureTimeAndGcProducing(() => DictSetOne(b, 0, true), n); }
+        [Test, Performance] public void ImmutableDictionary_SetItem_bool_N100() { const int n = 100; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Bools(n), n)); Bench.MeasureTimeAndGcProducing(() => DictSetOne(b, n / 2, true), n); }
+        [Test, Performance] public void ImmutableDictionary_SetItem_bool_N10000() { const int n = 10000; var b = ImmutableDictionary.CreateRange(ToKvp(Src.Bools(n), n)); Bench.MeasureTimeAndGcProducing(() => DictSetOne(b, n / 2, true), n); }
 
         // ---- 查 Get (TryGetValue O(log n) x SubOp; in-place, GC ~= 0) ----
         [Test, Performance] public void ImmutableDictionary_Get_int_N1() { const int n = 1; var d = ImmutableDictionary.CreateRange(ToKvp(Src.Ints(n), n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += DictGetScan(d, n, m), null, () => Sink(sink), n); }
@@ -466,6 +520,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableDictionary_Get_ref_N1() { const int n = 1; var d = ImmutableDictionary.CreateRange(ToKvp(Src.Refs(n), n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += DictGetScan(d, n, m), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableDictionary_Get_ref_N100() { const int n = 100; var d = ImmutableDictionary.CreateRange(ToKvp(Src.Refs(n), n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += DictGetScan(d, n, m), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableDictionary_Get_ref_N10000() { const int n = 10000; var d = ImmutableDictionary.CreateRange(ToKvp(Src.Refs(n), n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += DictGetScan(d, n, m), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableDictionary_Get_bool_N1() { const int n = 1; var d = ImmutableDictionary.CreateRange(ToKvp(Src.Bools(n), n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += DictGetScan(d, n, m), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableDictionary_Get_bool_N100() { const int n = 100; var d = ImmutableDictionary.CreateRange(ToKvp(Src.Bools(n), n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += DictGetScan(d, n, m), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableDictionary_Get_bool_N10000() { const int n = 10000; var d = ImmutableDictionary.CreateRange(ToKvp(Src.Bools(n), n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += DictGetScan(d, n, m), null, () => Sink(sink), n); }
 
         // ---- 遍历 Iterate ----
         [Test, Performance] public void ImmutableDictionary_Iterate_int_N1() { const int n = 1; var d = ImmutableDictionary.CreateRange(ToKvp(Src.Ints(n), n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += DictIterate(d), null, () => Sink(sink), n); }
@@ -477,6 +534,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableDictionary_Iterate_ref_N1() { const int n = 1; var d = ImmutableDictionary.CreateRange(ToKvp(Src.Refs(n), n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += DictIterate(d), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableDictionary_Iterate_ref_N100() { const int n = 100; var d = ImmutableDictionary.CreateRange(ToKvp(Src.Refs(n), n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += DictIterate(d), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableDictionary_Iterate_ref_N10000() { const int n = 10000; var d = ImmutableDictionary.CreateRange(ToKvp(Src.Refs(n), n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += DictIterate(d), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableDictionary_Iterate_bool_N1() { const int n = 1; var d = ImmutableDictionary.CreateRange(ToKvp(Src.Bools(n), n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += DictIterate(d), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableDictionary_Iterate_bool_N100() { const int n = 100; var d = ImmutableDictionary.CreateRange(ToKvp(Src.Bools(n), n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += DictIterate(d), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableDictionary_Iterate_bool_N10000() { const int n = 10000; var d = ImmutableDictionary.CreateRange(ToKvp(Src.Bools(n), n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += DictIterate(d), null, () => Sink(sink), n); }
 
         // ====================================================================
         // ImmutableSortedDictionary<int,T> (sorted AVL tree); key=int, value=elem
@@ -493,6 +553,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableSortedDictionary_Build_ref_N1() { const int n = 1; var s = Src.Refs(n); Bench.MeasureTimeAndGcProducing(() => SDictBuild(s, n), n); }
         [Test, Performance] public void ImmutableSortedDictionary_Build_ref_N100() { const int n = 100; var s = Src.Refs(n); Bench.MeasureTimeAndGcProducing(() => SDictBuild(s, n), n); }
         [Test, Performance] public void ImmutableSortedDictionary_Build_ref_N10000() { const int n = 10000; var s = Src.Refs(n); Bench.MeasureTimeAndGcProducing(() => SDictBuild(s, n), n); }
+        [Test, Performance] public void ImmutableSortedDictionary_Build_bool_N1() { const int n = 1; var s = Src.Bools(n); Bench.MeasureTimeAndGcProducing(() => SDictBuild(s, n), n); }
+        [Test, Performance] public void ImmutableSortedDictionary_Build_bool_N100() { const int n = 100; var s = Src.Bools(n); Bench.MeasureTimeAndGcProducing(() => SDictBuild(s, n), n); }
+        [Test, Performance] public void ImmutableSortedDictionary_Build_bool_N10000() { const int n = 10000; var s = Src.Bools(n); Bench.MeasureTimeAndGcProducing(() => SDictBuild(s, n), n); }
 
         // ---- 增单次 SetItemOne (new key) ----
         [Test, Performance] public void ImmutableSortedDictionary_SetItemOne_int_N1() { const int n = 1; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Ints(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictSetOne(b, n + 1, 999999), n); }
@@ -504,6 +567,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableSortedDictionary_SetItemOne_ref_N1() { const int n = 1; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Refs(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictSetOne(b, n + 1, new RefElem(999999)), n); }
         [Test, Performance] public void ImmutableSortedDictionary_SetItemOne_ref_N100() { const int n = 100; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Refs(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictSetOne(b, n + 1, new RefElem(999999)), n); }
         [Test, Performance] public void ImmutableSortedDictionary_SetItemOne_ref_N10000() { const int n = 10000; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Refs(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictSetOne(b, n + 1, new RefElem(999999)), n); }
+        [Test, Performance] public void ImmutableSortedDictionary_SetItemOne_bool_N1() { const int n = 1; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Bools(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictSetOne(b, n + 1, true), n); }
+        [Test, Performance] public void ImmutableSortedDictionary_SetItemOne_bool_N100() { const int n = 100; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Bools(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictSetOne(b, n + 1, true), n); }
+        [Test, Performance] public void ImmutableSortedDictionary_SetItemOne_bool_N10000() { const int n = 10000; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Bools(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictSetOne(b, n + 1, true), n); }
 
         // ---- 删 Remove (single key) ----
         [Test, Performance] public void ImmutableSortedDictionary_Remove_int_N1() { const int n = 1; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Ints(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictRemove(b, 0), n); }
@@ -515,6 +581,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableSortedDictionary_Remove_ref_N1() { const int n = 1; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Refs(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictRemove(b, 0), n); }
         [Test, Performance] public void ImmutableSortedDictionary_Remove_ref_N100() { const int n = 100; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Refs(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictRemove(b, n / 2), n); }
         [Test, Performance] public void ImmutableSortedDictionary_Remove_ref_N10000() { const int n = 10000; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Refs(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictRemove(b, n / 2), n); }
+        [Test, Performance] public void ImmutableSortedDictionary_Remove_bool_N1() { const int n = 1; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Bools(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictRemove(b, 0), n); }
+        [Test, Performance] public void ImmutableSortedDictionary_Remove_bool_N100() { const int n = 100; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Bools(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictRemove(b, n / 2), n); }
+        [Test, Performance] public void ImmutableSortedDictionary_Remove_bool_N10000() { const int n = 10000; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Bools(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictRemove(b, n / 2), n); }
 
         // ---- 改 SetItem (existing key) ----
         [Test, Performance] public void ImmutableSortedDictionary_SetItem_int_N1() { const int n = 1; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Ints(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictSetOne(b, 0, 777), n); }
@@ -526,6 +595,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableSortedDictionary_SetItem_ref_N1() { const int n = 1; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Refs(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictSetOne(b, 0, new RefElem(777)), n); }
         [Test, Performance] public void ImmutableSortedDictionary_SetItem_ref_N100() { const int n = 100; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Refs(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictSetOne(b, n / 2, new RefElem(777)), n); }
         [Test, Performance] public void ImmutableSortedDictionary_SetItem_ref_N10000() { const int n = 10000; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Refs(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictSetOne(b, n / 2, new RefElem(777)), n); }
+        [Test, Performance] public void ImmutableSortedDictionary_SetItem_bool_N1() { const int n = 1; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Bools(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictSetOne(b, 0, true), n); }
+        [Test, Performance] public void ImmutableSortedDictionary_SetItem_bool_N100() { const int n = 100; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Bools(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictSetOne(b, n / 2, true), n); }
+        [Test, Performance] public void ImmutableSortedDictionary_SetItem_bool_N10000() { const int n = 10000; var b = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Bools(n), n)); Bench.MeasureTimeAndGcProducing(() => SDictSetOne(b, n / 2, true), n); }
 
         // ---- 查 Get (TryGetValue O(log n) x SubOp) ----
         [Test, Performance] public void ImmutableSortedDictionary_Get_int_N1() { const int n = 1; var d = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Ints(n), n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += SDictGetScan(d, n, m), null, () => Sink(sink), n); }
@@ -537,6 +609,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableSortedDictionary_Get_ref_N1() { const int n = 1; var d = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Refs(n), n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += SDictGetScan(d, n, m), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableSortedDictionary_Get_ref_N100() { const int n = 100; var d = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Refs(n), n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += SDictGetScan(d, n, m), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableSortedDictionary_Get_ref_N10000() { const int n = 10000; var d = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Refs(n), n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += SDictGetScan(d, n, m), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableSortedDictionary_Get_bool_N1() { const int n = 1; var d = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Bools(n), n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += SDictGetScan(d, n, m), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableSortedDictionary_Get_bool_N100() { const int n = 100; var d = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Bools(n), n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += SDictGetScan(d, n, m), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableSortedDictionary_Get_bool_N10000() { const int n = 10000; var d = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Bools(n), n)); int m = Bench.SubOpCount(n); int sink = 0; Bench.MeasureTimeAndGc(() => sink += SDictGetScan(d, n, m), null, () => Sink(sink), n); }
 
         // ---- 遍历 Iterate ----
         [Test, Performance] public void ImmutableSortedDictionary_Iterate_int_N1() { const int n = 1; var d = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Ints(n), n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += SDictIterate(d), null, () => Sink(sink), n); }
@@ -548,6 +623,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableSortedDictionary_Iterate_ref_N1() { const int n = 1; var d = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Refs(n), n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += SDictIterate(d), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableSortedDictionary_Iterate_ref_N100() { const int n = 100; var d = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Refs(n), n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += SDictIterate(d), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableSortedDictionary_Iterate_ref_N10000() { const int n = 10000; var d = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Refs(n), n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += SDictIterate(d), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableSortedDictionary_Iterate_bool_N1() { const int n = 1; var d = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Bools(n), n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += SDictIterate(d), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableSortedDictionary_Iterate_bool_N100() { const int n = 100; var d = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Bools(n), n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += SDictIterate(d), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableSortedDictionary_Iterate_bool_N10000() { const int n = 10000; var d = ImmutableSortedDictionary.CreateRange(ToKvp(Src.Bools(n), n)); long sink = 0; Bench.MeasureTimeAndGc(() => sink += SDictIterate(d), null, () => Sink(sink), n); }
 
         // ====================================================================
         // ImmutableHashSet<T> (hash AVL tree); element is key
@@ -685,6 +763,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableQueue_Build_ref_N1() { const int n = 1; var s = Src.Refs(n); Bench.MeasureTimeAndGcProducing(() => QueueBuild(s, n), n); }
         [Test, Performance] public void ImmutableQueue_Build_ref_N100() { const int n = 100; var s = Src.Refs(n); Bench.MeasureTimeAndGcProducing(() => QueueBuild(s, n), n); }
         [Test, Performance] public void ImmutableQueue_Build_ref_N10000() { const int n = 10000; var s = Src.Refs(n); Bench.MeasureTimeAndGcProducing(() => QueueBuild(s, n), n); }
+        [Test, Performance] public void ImmutableQueue_Build_bool_N1() { const int n = 1; var s = Src.Bools(n); Bench.MeasureTimeAndGcProducing(() => QueueBuild(s, n), n); }
+        [Test, Performance] public void ImmutableQueue_Build_bool_N100() { const int n = 100; var s = Src.Bools(n); Bench.MeasureTimeAndGcProducing(() => QueueBuild(s, n), n); }
+        [Test, Performance] public void ImmutableQueue_Build_bool_N10000() { const int n = 10000; var s = Src.Bools(n); Bench.MeasureTimeAndGcProducing(() => QueueBuild(s, n), n); }
 
         // ---- 删 Drain (Dequeue to empty, producing chain) ----
         [Test, Performance] public void ImmutableQueue_Drain_int_N1() { const int n = 1; var b = QueueOf(Src.Ints(n), n); Bench.MeasureTimeAndGcProducing(() => QueueDrain(b), n); }
@@ -696,6 +777,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableQueue_Drain_ref_N1() { const int n = 1; var b = QueueOf(Src.Refs(n), n); Bench.MeasureTimeAndGcProducing(() => QueueDrain(b), n); }
         [Test, Performance] public void ImmutableQueue_Drain_ref_N100() { const int n = 100; var b = QueueOf(Src.Refs(n), n); Bench.MeasureTimeAndGcProducing(() => QueueDrain(b), n); }
         [Test, Performance] public void ImmutableQueue_Drain_ref_N10000() { const int n = 10000; var b = QueueOf(Src.Refs(n), n); Bench.MeasureTimeAndGcProducing(() => QueueDrain(b), n); }
+        [Test, Performance] public void ImmutableQueue_Drain_bool_N1() { const int n = 1; var b = QueueOf(Src.Bools(n), n); Bench.MeasureTimeAndGcProducing(() => QueueDrain(b), n); }
+        [Test, Performance] public void ImmutableQueue_Drain_bool_N100() { const int n = 100; var b = QueueOf(Src.Bools(n), n); Bench.MeasureTimeAndGcProducing(() => QueueDrain(b), n); }
+        [Test, Performance] public void ImmutableQueue_Drain_bool_N10000() { const int n = 10000; var b = QueueOf(Src.Bools(n), n); Bench.MeasureTimeAndGcProducing(() => QueueDrain(b), n); }
 
         // ---- 查 Peek (front element; in-place, GC ~= 0) ----
         [Test, Performance] public void ImmutableQueue_Peek_int_N1() { const int n = 1; var q = QueueOf(Src.Ints(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += QueuePeek(q), null, () => Sink(sink), n); }
@@ -707,6 +791,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableQueue_Peek_ref_N1() { const int n = 1; var q = QueueOf(Src.Refs(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += QueuePeek(q), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableQueue_Peek_ref_N100() { const int n = 100; var q = QueueOf(Src.Refs(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += QueuePeek(q), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableQueue_Peek_ref_N10000() { const int n = 10000; var q = QueueOf(Src.Refs(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += QueuePeek(q), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableQueue_Peek_bool_N1() { const int n = 1; var q = QueueOf(Src.Bools(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += QueuePeek(q), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableQueue_Peek_bool_N100() { const int n = 100; var q = QueueOf(Src.Bools(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += QueuePeek(q), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableQueue_Peek_bool_N10000() { const int n = 10000; var q = QueueOf(Src.Bools(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += QueuePeek(q), null, () => Sink(sink), n); }
 
         // ---- 遍历 Iterate ----
         [Test, Performance] public void ImmutableQueue_Iterate_int_N1() { const int n = 1; var q = QueueOf(Src.Ints(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += QueueIterate(q), null, () => Sink(sink), n); }
@@ -718,6 +805,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableQueue_Iterate_ref_N1() { const int n = 1; var q = QueueOf(Src.Refs(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += QueueIterate(q), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableQueue_Iterate_ref_N100() { const int n = 100; var q = QueueOf(Src.Refs(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += QueueIterate(q), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableQueue_Iterate_ref_N10000() { const int n = 10000; var q = QueueOf(Src.Refs(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += QueueIterate(q), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableQueue_Iterate_bool_N1() { const int n = 1; var q = QueueOf(Src.Bools(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += QueueIterate(q), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableQueue_Iterate_bool_N100() { const int n = 100; var q = QueueOf(Src.Bools(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += QueueIterate(q), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableQueue_Iterate_bool_N10000() { const int n = 10000; var q = QueueOf(Src.Bools(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += QueueIterate(q), null, () => Sink(sink), n); }
 
         // ====================================================================
         // ImmutableStack<T> (singly-linked persistent; no builder)
@@ -735,6 +825,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableStack_Build_ref_N1() { const int n = 1; var s = Src.Refs(n); Bench.MeasureTimeAndGcProducing(() => StackBuild(s, n), n); }
         [Test, Performance] public void ImmutableStack_Build_ref_N100() { const int n = 100; var s = Src.Refs(n); Bench.MeasureTimeAndGcProducing(() => StackBuild(s, n), n); }
         [Test, Performance] public void ImmutableStack_Build_ref_N10000() { const int n = 10000; var s = Src.Refs(n); Bench.MeasureTimeAndGcProducing(() => StackBuild(s, n), n); }
+        [Test, Performance] public void ImmutableStack_Build_bool_N1() { const int n = 1; var s = Src.Bools(n); Bench.MeasureTimeAndGcProducing(() => StackBuild(s, n), n); }
+        [Test, Performance] public void ImmutableStack_Build_bool_N100() { const int n = 100; var s = Src.Bools(n); Bench.MeasureTimeAndGcProducing(() => StackBuild(s, n), n); }
+        [Test, Performance] public void ImmutableStack_Build_bool_N10000() { const int n = 10000; var s = Src.Bools(n); Bench.MeasureTimeAndGcProducing(() => StackBuild(s, n), n); }
 
         // ---- 删 Drain (Pop to empty, producing chain) ----
         [Test, Performance] public void ImmutableStack_Drain_int_N1() { const int n = 1; var b = StackOf(Src.Ints(n), n); Bench.MeasureTimeAndGcProducing(() => StackDrain(b), n); }
@@ -746,6 +839,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableStack_Drain_ref_N1() { const int n = 1; var b = StackOf(Src.Refs(n), n); Bench.MeasureTimeAndGcProducing(() => StackDrain(b), n); }
         [Test, Performance] public void ImmutableStack_Drain_ref_N100() { const int n = 100; var b = StackOf(Src.Refs(n), n); Bench.MeasureTimeAndGcProducing(() => StackDrain(b), n); }
         [Test, Performance] public void ImmutableStack_Drain_ref_N10000() { const int n = 10000; var b = StackOf(Src.Refs(n), n); Bench.MeasureTimeAndGcProducing(() => StackDrain(b), n); }
+        [Test, Performance] public void ImmutableStack_Drain_bool_N1() { const int n = 1; var b = StackOf(Src.Bools(n), n); Bench.MeasureTimeAndGcProducing(() => StackDrain(b), n); }
+        [Test, Performance] public void ImmutableStack_Drain_bool_N100() { const int n = 100; var b = StackOf(Src.Bools(n), n); Bench.MeasureTimeAndGcProducing(() => StackDrain(b), n); }
+        [Test, Performance] public void ImmutableStack_Drain_bool_N10000() { const int n = 10000; var b = StackOf(Src.Bools(n), n); Bench.MeasureTimeAndGcProducing(() => StackDrain(b), n); }
 
         // ---- 查 Peek (top element; in-place, GC ~= 0) ----
         [Test, Performance] public void ImmutableStack_Peek_int_N1() { const int n = 1; var st = StackOf(Src.Ints(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += StackPeek(st), null, () => Sink(sink), n); }
@@ -757,6 +853,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableStack_Peek_ref_N1() { const int n = 1; var st = StackOf(Src.Refs(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += StackPeek(st), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableStack_Peek_ref_N100() { const int n = 100; var st = StackOf(Src.Refs(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += StackPeek(st), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableStack_Peek_ref_N10000() { const int n = 10000; var st = StackOf(Src.Refs(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += StackPeek(st), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableStack_Peek_bool_N1() { const int n = 1; var st = StackOf(Src.Bools(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += StackPeek(st), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableStack_Peek_bool_N100() { const int n = 100; var st = StackOf(Src.Bools(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += StackPeek(st), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableStack_Peek_bool_N10000() { const int n = 10000; var st = StackOf(Src.Bools(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += StackPeek(st), null, () => Sink(sink), n); }
 
         // ---- 遍历 Iterate ----
         [Test, Performance] public void ImmutableStack_Iterate_int_N1() { const int n = 1; var st = StackOf(Src.Ints(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += StackIterate(st), null, () => Sink(sink), n); }
@@ -768,6 +867,9 @@ namespace CollectionBenchmarks
         [Test, Performance] public void ImmutableStack_Iterate_ref_N1() { const int n = 1; var st = StackOf(Src.Refs(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += StackIterate(st), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableStack_Iterate_ref_N100() { const int n = 100; var st = StackOf(Src.Refs(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += StackIterate(st), null, () => Sink(sink), n); }
         [Test, Performance] public void ImmutableStack_Iterate_ref_N10000() { const int n = 10000; var st = StackOf(Src.Refs(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += StackIterate(st), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableStack_Iterate_bool_N1() { const int n = 1; var st = StackOf(Src.Bools(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += StackIterate(st), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableStack_Iterate_bool_N100() { const int n = 100; var st = StackOf(Src.Bools(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += StackIterate(st), null, () => Sink(sink), n); }
+        [Test, Performance] public void ImmutableStack_Iterate_bool_N10000() { const int n = 10000; var st = StackOf(Src.Bools(n), n); long sink = 0; Bench.MeasureTimeAndGc(() => sink += StackIterate(st), null, () => Sink(sink), n); }
 
         // ====================================================================
         // Helpers: prebuilt instances (NOT measured) for read/drain ops.

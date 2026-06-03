@@ -90,6 +90,20 @@ namespace CollectionBenchmarks
                 n: n);
         }
 
+        [Test, Performance]
+        public void Collection_Add_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            Bench.MeasureTimeAndGcProducing(
+                produce: () =>
+                {
+                    var col = new Collection<bool>();
+                    for (int i = 0; i < n; i++) col.Add(src[i]);
+                    return col;
+                },
+                n: n);
+        }
+
         // ---- Collection<T> 增-头插 (Insert(0), build to N): O(n) shift each ----
         [Test, Performance]
         public void Collection_InsertHead_int([Values(1, 100, 10000)] int n)
@@ -127,6 +141,20 @@ namespace CollectionBenchmarks
                 produce: () =>
                 {
                     var col = new Collection<RefElem>();
+                    for (int i = 0; i < n; i++) col.Insert(0, src[i]);
+                    return col;
+                },
+                n: n);
+        }
+
+        [Test, Performance]
+        public void Collection_InsertHead_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            Bench.MeasureTimeAndGcProducing(
+                produce: () =>
+                {
+                    var col = new Collection<bool>();
                     for (int i = 0; i < n; i++) col.Insert(0, src[i]);
                     return col;
                 },
@@ -179,6 +207,21 @@ namespace CollectionBenchmarks
                 n: n);
         }
 
+        [Test, Performance]
+        public void Collection_RemoveAt_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            Collection<bool> col = null;
+            Bench.MeasureTimeAndGc(
+                action: () =>
+                {
+                    for (int i = col.Count - 1; i >= 0; i--) col.RemoveAt(i);
+                },
+                setup: () => { col = new Collection<bool>(new List<bool>(src)); },
+                cleanup: null,
+                n: n);
+        }
+
         // ---- Collection<T> 改 (this[i]=v ×M): in-place, expect GC ~= 0 ----
         [Test, Performance]
         public void Collection_Set_int([Values(1, 100, 10000)] int n)
@@ -218,6 +261,22 @@ namespace CollectionBenchmarks
             RefElem[] src = Src.Refs(n);
             int m = Bench.SubOpCount(n);
             var col = new Collection<RefElem>(new List<RefElem>(src));
+            Bench.MeasureTimeAndGc(
+                action: () =>
+                {
+                    for (int i = 0; i < m; i++) col[i] = src[i];
+                },
+                setup: null,
+                cleanup: null,
+                n: n);
+        }
+
+        [Test, Performance]
+        public void Collection_Set_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            int m = Bench.SubOpCount(n);
+            var col = new Collection<bool>(new List<bool>(src));
             Bench.MeasureTimeAndGc(
                 action: () =>
                 {
@@ -286,6 +345,25 @@ namespace CollectionBenchmarks
                 n: n);
         }
 
+        [Test, Performance]
+        public void Collection_Get_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            int m = Bench.SubOpCount(n);
+            int ls = Bench.LinearScanCount(n);
+            var col = new Collection<bool>(new List<bool>(src));
+            long sink = 0;
+            Bench.MeasureTimeAndGc(
+                action: () =>
+                {
+                    for (int i = 0; i < m; i++) sink += col[i] ? 1 : 0;
+                    for (int i = 0; i < ls; i++) if (col.Contains(src[i])) sink++;
+                },
+                setup: null,
+                cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); },
+                n: n);
+        }
+
         // ---- Collection<T> 遍历 (foreach full): expect GC ~= 0 ----
         [Test, Performance]
         public void Collection_Iterate_int([Values(1, 100, 10000)] int n)
@@ -318,6 +396,18 @@ namespace CollectionBenchmarks
             long sink = 0;
             Bench.MeasureTimeAndGc(
                 action: () => { foreach (RefElem v in col) sink += v.A; },
+                setup: null,
+                cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); },
+                n: n);
+        }
+
+        [Test, Performance]
+        public void Collection_Iterate_bool([Values(1, 100, 10000)] int n)
+        {
+            var col = new Collection<bool>(new List<bool>(Src.Bools(n)));
+            long sink = 0;
+            Bench.MeasureTimeAndGc(
+                action: () => { foreach (bool v in col) sink += v ? 1 : 0; },
                 setup: null,
                 cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); },
                 n: n);
@@ -371,6 +461,20 @@ namespace CollectionBenchmarks
                 n: n);
         }
 
+        [Test, Performance]
+        public void ObservableCollection_Add_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            Bench.MeasureTimeAndGcProducing(
+                produce: () =>
+                {
+                    var col = new ObservableCollection<bool>();
+                    for (int i = 0; i < n; i++) col.Add(src[i]);
+                    return col;
+                },
+                n: n);
+        }
+
         // ---- ObservableCollection<T> 增-头插 (Insert(0), build to N) ----
         [Test, Performance]
         public void ObservableCollection_InsertHead_int([Values(1, 100, 10000)] int n)
@@ -408,6 +512,20 @@ namespace CollectionBenchmarks
                 produce: () =>
                 {
                     var col = new ObservableCollection<RefElem>();
+                    for (int i = 0; i < n; i++) col.Insert(0, src[i]);
+                    return col;
+                },
+                n: n);
+        }
+
+        [Test, Performance]
+        public void ObservableCollection_InsertHead_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            Bench.MeasureTimeAndGcProducing(
+                produce: () =>
+                {
+                    var col = new ObservableCollection<bool>();
                     for (int i = 0; i < n; i++) col.Insert(0, src[i]);
                     return col;
                 },
@@ -460,6 +578,21 @@ namespace CollectionBenchmarks
                 n: n);
         }
 
+        [Test, Performance]
+        public void ObservableCollection_RemoveAt_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            ObservableCollection<bool> col = null;
+            Bench.MeasureTimeAndGc(
+                action: () =>
+                {
+                    for (int i = col.Count - 1; i >= 0; i--) col.RemoveAt(i);
+                },
+                setup: () => { col = new ObservableCollection<bool>(src); },
+                cleanup: null,
+                n: n);
+        }
+
         // ---- ObservableCollection<T> 改 (this[i]=v ×M): triggers Replace notify ----
         [Test, Performance]
         public void ObservableCollection_Set_int([Values(1, 100, 10000)] int n)
@@ -499,6 +632,22 @@ namespace CollectionBenchmarks
             RefElem[] src = Src.Refs(n);
             int m = Bench.SubOpCount(n);
             var col = new ObservableCollection<RefElem>(src);
+            Bench.MeasureTimeAndGc(
+                action: () =>
+                {
+                    for (int i = 0; i < m; i++) col[i] = src[i];
+                },
+                setup: null,
+                cleanup: null,
+                n: n);
+        }
+
+        [Test, Performance]
+        public void ObservableCollection_Set_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            int m = Bench.SubOpCount(n);
+            var col = new ObservableCollection<bool>(src);
             Bench.MeasureTimeAndGc(
                 action: () =>
                 {
@@ -567,6 +716,25 @@ namespace CollectionBenchmarks
                 n: n);
         }
 
+        [Test, Performance]
+        public void ObservableCollection_Get_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            int m = Bench.SubOpCount(n);
+            int ls = Bench.LinearScanCount(n);
+            var col = new ObservableCollection<bool>(src);
+            long sink = 0;
+            Bench.MeasureTimeAndGc(
+                action: () =>
+                {
+                    for (int i = 0; i < m; i++) sink += col[i] ? 1 : 0;
+                    for (int i = 0; i < ls; i++) if (col.Contains(src[i])) sink++;
+                },
+                setup: null,
+                cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); },
+                n: n);
+        }
+
         // ---- ObservableCollection<T> 遍历 (foreach full): expect GC ~= 0 ----
         [Test, Performance]
         public void ObservableCollection_Iterate_int([Values(1, 100, 10000)] int n)
@@ -599,6 +767,18 @@ namespace CollectionBenchmarks
             long sink = 0;
             Bench.MeasureTimeAndGc(
                 action: () => { foreach (RefElem v in col) sink += v.A; },
+                setup: null,
+                cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); },
+                n: n);
+        }
+
+        [Test, Performance]
+        public void ObservableCollection_Iterate_bool([Values(1, 100, 10000)] int n)
+        {
+            var col = new ObservableCollection<bool>(Src.Bools(n));
+            long sink = 0;
+            Bench.MeasureTimeAndGc(
+                action: () => { foreach (bool v in col) sink += v ? 1 : 0; },
                 setup: null,
                 cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); },
                 n: n);
@@ -667,6 +847,25 @@ namespace CollectionBenchmarks
                 n: n);
         }
 
+        [Test, Performance]
+        public void ReadOnlyCollection_Get_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            int m = Bench.SubOpCount(n);
+            int ls = Bench.LinearScanCount(n);
+            var col = new ReadOnlyCollection<bool>(new List<bool>(src)); // construct: not measured
+            long sink = 0;
+            Bench.MeasureTimeAndGc(
+                action: () =>
+                {
+                    for (int i = 0; i < m; i++) sink += col[i] ? 1 : 0;
+                    for (int i = 0; i < ls; i++) if (col.Contains(src[i])) sink++;
+                },
+                setup: null,
+                cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); },
+                n: n);
+        }
+
         // ---- ReadOnlyCollection<T> 遍历 (foreach full): expect GC ~= 0 ----
         [Test, Performance]
         public void ReadOnlyCollection_Iterate_int([Values(1, 100, 10000)] int n)
@@ -699,6 +898,18 @@ namespace CollectionBenchmarks
             long sink = 0;
             Bench.MeasureTimeAndGc(
                 action: () => { foreach (RefElem v in col) sink += v.A; },
+                setup: null,
+                cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); },
+                n: n);
+        }
+
+        [Test, Performance]
+        public void ReadOnlyCollection_Iterate_bool([Values(1, 100, 10000)] int n)
+        {
+            var col = new ReadOnlyCollection<bool>(new List<bool>(Src.Bools(n)));
+            long sink = 0;
+            Bench.MeasureTimeAndGc(
+                action: () => { foreach (bool v in col) sink += v ? 1 : 0; },
                 setup: null,
                 cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); },
                 n: n);
@@ -770,6 +981,27 @@ namespace CollectionBenchmarks
                 n: n);
         }
 
+        // key=int (loop index i, distinct per slot), value=bool. bool 不能当键 (退化), 故键用 i.
+        [Test, Performance]
+        public void ReadOnlyDictionary_Get_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            int m = Bench.SubOpCount(n);
+            var inner = new Dictionary<int, bool>(n);
+            for (int i = 0; i < n; i++) inner[i] = src[i];
+            var dict = new ReadOnlyDictionary<int, bool>(inner); // construct: not measured
+            long sink = 0;
+            Bench.MeasureTimeAndGc(
+                action: () =>
+                {
+                    for (int i = 0; i < m; i++)
+                        if (dict.TryGetValue(i, out bool v)) sink += v ? 1 : 0;
+                },
+                setup: null,
+                cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); },
+                n: n);
+        }
+
         // ---- ReadOnlyDictionary<int,T> 遍历 (foreach KVP full): expect GC ~= 0 ----
         [Test, Performance]
         public void ReadOnlyDictionary_Iterate_int([Values(1, 100, 10000)] int n)
@@ -811,6 +1043,22 @@ namespace CollectionBenchmarks
             long sink = 0;
             Bench.MeasureTimeAndGc(
                 action: () => { foreach (var kv in dict) sink += kv.Value.A; },
+                setup: null,
+                cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); },
+                n: n);
+        }
+
+        // key=int (loop index i), value=bool.
+        [Test, Performance]
+        public void ReadOnlyDictionary_Iterate_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            var inner = new Dictionary<int, bool>(n);
+            for (int i = 0; i < n; i++) inner[i] = src[i];
+            var dict = new ReadOnlyDictionary<int, bool>(inner);
+            long sink = 0;
+            Bench.MeasureTimeAndGc(
+                action: () => { foreach (var kv in dict) sink += kv.Value ? 1 : 0; },
                 setup: null,
                 cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); },
                 n: n);

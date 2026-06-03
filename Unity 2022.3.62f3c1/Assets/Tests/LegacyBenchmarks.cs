@@ -80,6 +80,20 @@ namespace CollectionBenchmarks
                 n: n);
         }
 
+        [Test, Performance]
+        public void ArrayList_Add_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            Bench.MeasureTimeAndGcProducing(
+                produce: () =>
+                {
+                    var list = new ArrayList();
+                    for (int i = 0; i < n; i++) list.Add(src[i]); // bool boxed into ArrayList
+                    return list;
+                },
+                n: n);
+        }
+
         // ---- 增-头插: Insert(0) each time -> O(n) shift per insert (O(n^2) build) ----
         [Test, Performance]
         public void ArrayList_Insert0_int([Values(1, 100, 10000)] int n)
@@ -123,6 +137,20 @@ namespace CollectionBenchmarks
                 n: n);
         }
 
+        [Test, Performance]
+        public void ArrayList_Insert0_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            Bench.MeasureTimeAndGcProducing(
+                produce: () =>
+                {
+                    var list = new ArrayList();
+                    for (int i = 0; i < n; i++) list.Insert(0, src[i]); // box + head shift
+                    return list;
+                },
+                n: n);
+        }
+
         // ---- 删: RemoveAt(Count-1) drain to empty. In-place; rebuild in setup ----
         void ArrayList_RemoveAt_Core(int n, ArrayList template)
         {
@@ -157,6 +185,15 @@ namespace CollectionBenchmarks
         {
             var template = new ArrayList();
             RefElem[] src = Src.Refs(n);
+            for (int i = 0; i < n; i++) template.Add(src[i]);
+            ArrayList_RemoveAt_Core(n, template);
+        }
+
+        [Test, Performance]
+        public void ArrayList_RemoveAt_bool([Values(1, 100, 10000)] int n)
+        {
+            var template = new ArrayList();
+            bool[] src = Src.Bools(n);
             for (int i = 0; i < n; i++) template.Add(src[i]);
             ArrayList_RemoveAt_Core(n, template);
         }
@@ -198,6 +235,18 @@ namespace CollectionBenchmarks
                 setup: null, cleanup: null, n: n);
         }
 
+        [Test, Performance]
+        public void ArrayList_Set_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            int m = Bench.SubOpCount(n);
+            var list = new ArrayList();
+            for (int i = 0; i < n; i++) list.Add(src[i]);
+            Bench.MeasureTimeAndGc(
+                action: () => { for (int i = 0; i < m; i++) list[i % n] = src[(i + 1) % n]; },
+                setup: null, cleanup: null, n: n);
+        }
+
         // ---- 查-索引: this[i] read ×M (O(1) each). Unbox not forced (stays object) ----
         [Test, Performance]
         public void ArrayList_Index_int([Values(1, 100, 10000)] int n)
@@ -229,6 +278,19 @@ namespace CollectionBenchmarks
         public void ArrayList_Index_ref([Values(1, 100, 10000)] int n)
         {
             RefElem[] src = Src.Refs(n);
+            int m = Bench.SubOpCount(n);
+            var list = new ArrayList();
+            for (int i = 0; i < n; i++) list.Add(src[i]);
+            object sink = null;
+            Bench.MeasureTimeAndGc(
+                action: () => { for (int i = 0; i < m; i++) sink = list[i % n]; },
+                setup: null, cleanup: () => { if (sink == this) UnityEngine.Debug.Log(sink); }, n: n);
+        }
+
+        [Test, Performance]
+        public void ArrayList_Index_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
             int m = Bench.SubOpCount(n);
             var list = new ArrayList();
             for (int i = 0; i < n; i++) list.Add(src[i]);
@@ -278,6 +340,19 @@ namespace CollectionBenchmarks
                 setup: null, cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); }, n: n);
         }
 
+        [Test, Performance]
+        public void ArrayList_Contains_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            int m = Bench.LinearScanCount(n);
+            var list = new ArrayList();
+            for (int i = 0; i < n; i++) list.Add(src[i]);
+            int sink = 0;
+            Bench.MeasureTimeAndGc(
+                action: () => { for (int i = 0; i < m; i++) if (list.Contains(src[i])) sink++; },
+                setup: null, cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); }, n: n);
+        }
+
         // ---- 遍历: foreach full. Enumerator yields object; no per-elem alloc ----
         [Test, Performance]
         public void ArrayList_Iterate_int([Values(1, 100, 10000)] int n)
@@ -312,6 +387,18 @@ namespace CollectionBenchmarks
             long sink = 0;
             Bench.MeasureTimeAndGc(
                 action: () => { foreach (object o in list) sink += ((RefElem)o).A; },
+                setup: null, cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); }, n: n);
+        }
+
+        [Test, Performance]
+        public void ArrayList_Iterate_bool([Values(1, 100, 10000)] int n)
+        {
+            var list = new ArrayList();
+            bool[] src = Src.Bools(n);
+            for (int i = 0; i < n; i++) list.Add(src[i]);
+            long sink = 0;
+            Bench.MeasureTimeAndGc(
+                action: () => { foreach (object o in list) if ((bool)o) sink++; },
                 setup: null, cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); }, n: n);
         }
 
@@ -364,6 +451,20 @@ namespace CollectionBenchmarks
                 n: n);
         }
 
+        [Test, Performance]
+        public void Hashtable_Add_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            Bench.MeasureTimeAndGcProducing(
+                produce: () =>
+                {
+                    var h = new Hashtable();
+                    for (int i = 0; i < n; i++) h.Add(i, src[i]); // key box + bool box
+                    return h;
+                },
+                n: n);
+        }
+
         // ---- 删: Remove(intKey) ×M, drain. In-place; rebuild in setup (box key probe) ----
         void Hashtable_Remove_Core(int n, Hashtable template)
         {
@@ -402,6 +503,15 @@ namespace CollectionBenchmarks
             Hashtable_Remove_Core(n, t);
         }
 
+        [Test, Performance]
+        public void Hashtable_Remove_bool([Values(1, 100, 10000)] int n)
+        {
+            var t = new Hashtable();
+            bool[] src = Src.Bools(n);
+            for (int i = 0; i < n; i++) t.Add(i, src[i]);
+            Hashtable_Remove_Core(n, t);
+        }
+
         // ---- 改: this[intKey] = v2 ×M (overwrite existing). Box key probe + value ----
         [Test, Performance]
         public void Hashtable_Set_int([Values(1, 100, 10000)] int n)
@@ -431,6 +541,18 @@ namespace CollectionBenchmarks
         public void Hashtable_Set_ref([Values(1, 100, 10000)] int n)
         {
             RefElem[] src = Src.Refs(n);
+            int m = Bench.SubOpCount(n);
+            var h = new Hashtable();
+            for (int i = 0; i < n; i++) h.Add(i, src[i]);
+            Bench.MeasureTimeAndGc(
+                action: () => { for (int i = 0; i < m; i++) h[i % n] = src[(i + 1) % n]; },
+                setup: null, cleanup: null, n: n);
+        }
+
+        [Test, Performance]
+        public void Hashtable_Set_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
             int m = Bench.SubOpCount(n);
             var h = new Hashtable();
             for (int i = 0; i < n; i++) h.Add(i, src[i]);
@@ -479,6 +601,19 @@ namespace CollectionBenchmarks
                 setup: null, cleanup: () => { if (sink == this) UnityEngine.Debug.Log(sink); }, n: n);
         }
 
+        [Test, Performance]
+        public void Hashtable_Get_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            int m = Bench.SubOpCount(n);
+            var h = new Hashtable();
+            for (int i = 0; i < n; i++) h.Add(i, src[i]);
+            object sink = null;
+            Bench.MeasureTimeAndGc(
+                action: () => { for (int i = 0; i < m; i++) { int k = i % n; if (h.ContainsKey(k)) sink = h[k]; } },
+                setup: null, cleanup: () => { if (sink == this) UnityEngine.Debug.Log(sink); }, n: n);
+        }
+
         // ---- 遍历: foreach DictionaryEntry full. Enumerator boxes entry struct ----
         [Test, Performance]
         public void Hashtable_Iterate_int([Values(1, 100, 10000)] int n)
@@ -516,6 +651,18 @@ namespace CollectionBenchmarks
                 setup: null, cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); }, n: n);
         }
 
+        [Test, Performance]
+        public void Hashtable_Iterate_bool([Values(1, 100, 10000)] int n)
+        {
+            var h = new Hashtable();
+            bool[] src = Src.Bools(n);
+            for (int i = 0; i < n; i++) h.Add(i, src[i]);
+            long sink = 0;
+            Bench.MeasureTimeAndGc(
+                action: () => { foreach (DictionaryEntry e in h) if ((bool)e.Value) sink++; },
+                setup: null, cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); }, n: n);
+        }
+
         // ====================================================================
         // Queue (非泛型 System.Collections.Queue):
         //   增(Enqueue) / 删(Dequeue 排空) / 查(Peek + Contains ×LinearScan) / 遍历
@@ -544,6 +691,15 @@ namespace CollectionBenchmarks
         public void Queue_Enqueue_ref([Values(1, 100, 10000)] int n)
         {
             RefElem[] src = Src.Refs(n);
+            Bench.MeasureTimeAndGcProducing(
+                produce: () => { var q = new Queue(); for (int i = 0; i < n; i++) q.Enqueue(src[i]); return q; },
+                n: n);
+        }
+
+        [Test, Performance]
+        public void Queue_Enqueue_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
             Bench.MeasureTimeAndGcProducing(
                 produce: () => { var q = new Queue(); for (int i = 0; i < n; i++) q.Enqueue(src[i]); return q; },
                 n: n);
@@ -583,6 +739,14 @@ namespace CollectionBenchmarks
             Queue_Dequeue_Core(n, t);
         }
 
+        [Test, Performance]
+        public void Queue_Dequeue_bool([Values(1, 100, 10000)] int n)
+        {
+            var t = new Queue(); bool[] src = Src.Bools(n);
+            for (int i = 0; i < n; i++) t.Enqueue(src[i]);
+            Queue_Dequeue_Core(n, t);
+        }
+
         // ---- 查: Peek + Contains (O(n) linear) ×LinearScan. ~0 alloc ----
         [Test, Performance]
         public void Queue_Peek_int([Values(1, 100, 10000)] int n)
@@ -612,6 +776,18 @@ namespace CollectionBenchmarks
         public void Queue_Peek_ref([Values(1, 100, 10000)] int n)
         {
             RefElem[] src = Src.Refs(n);
+            int m = Bench.LinearScanCount(n);
+            var q = new Queue(); for (int i = 0; i < n; i++) q.Enqueue(src[i]);
+            int sink = 0; object pk = null;
+            Bench.MeasureTimeAndGc(
+                action: () => { pk = q.Peek(); for (int i = 0; i < m; i++) if (q.Contains(src[i])) sink++; },
+                setup: null, cleanup: () => { if (sink < 0 || pk == this) UnityEngine.Debug.Log(sink); }, n: n);
+        }
+
+        [Test, Performance]
+        public void Queue_Peek_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
             int m = Bench.LinearScanCount(n);
             var q = new Queue(); for (int i = 0; i < n; i++) q.Enqueue(src[i]);
             int sink = 0; object pk = null;
@@ -654,6 +830,17 @@ namespace CollectionBenchmarks
                 setup: null, cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); }, n: n);
         }
 
+        [Test, Performance]
+        public void Queue_Iterate_bool([Values(1, 100, 10000)] int n)
+        {
+            var q = new Queue(); bool[] src = Src.Bools(n);
+            for (int i = 0; i < n; i++) q.Enqueue(src[i]);
+            long sink = 0;
+            Bench.MeasureTimeAndGc(
+                action: () => { foreach (object o in q) if ((bool)o) sink++; },
+                setup: null, cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); }, n: n);
+        }
+
         // ====================================================================
         // Stack (非泛型 System.Collections.Stack):
         //   增(Push) / 删(Pop 排空) / 查(Peek + Contains ×LinearScan) / 遍历
@@ -681,6 +868,15 @@ namespace CollectionBenchmarks
         public void Stack_Push_ref([Values(1, 100, 10000)] int n)
         {
             RefElem[] src = Src.Refs(n);
+            Bench.MeasureTimeAndGcProducing(
+                produce: () => { var s = new Stack(); for (int i = 0; i < n; i++) s.Push(src[i]); return s; },
+                n: n);
+        }
+
+        [Test, Performance]
+        public void Stack_Push_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
             Bench.MeasureTimeAndGcProducing(
                 produce: () => { var s = new Stack(); for (int i = 0; i < n; i++) s.Push(src[i]); return s; },
                 n: n);
@@ -720,6 +916,14 @@ namespace CollectionBenchmarks
             Stack_Pop_Core(n, t);
         }
 
+        [Test, Performance]
+        public void Stack_Pop_bool([Values(1, 100, 10000)] int n)
+        {
+            var t = new Stack(); bool[] src = Src.Bools(n);
+            for (int i = 0; i < n; i++) t.Push(src[i]);
+            Stack_Pop_Core(n, t);
+        }
+
         // ---- 查: Peek + Contains (O(n)) ×LinearScan ----
         [Test, Performance]
         public void Stack_Peek_int([Values(1, 100, 10000)] int n)
@@ -749,6 +953,18 @@ namespace CollectionBenchmarks
         public void Stack_Peek_ref([Values(1, 100, 10000)] int n)
         {
             RefElem[] src = Src.Refs(n);
+            int m = Bench.LinearScanCount(n);
+            var s = new Stack(); for (int i = 0; i < n; i++) s.Push(src[i]);
+            int sink = 0; object pk = null;
+            Bench.MeasureTimeAndGc(
+                action: () => { pk = s.Peek(); for (int i = 0; i < m; i++) if (s.Contains(src[i])) sink++; },
+                setup: null, cleanup: () => { if (sink < 0 || pk == this) UnityEngine.Debug.Log(sink); }, n: n);
+        }
+
+        [Test, Performance]
+        public void Stack_Peek_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
             int m = Bench.LinearScanCount(n);
             var s = new Stack(); for (int i = 0; i < n; i++) s.Push(src[i]);
             int sink = 0; object pk = null;
@@ -791,6 +1007,17 @@ namespace CollectionBenchmarks
                 setup: null, cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); }, n: n);
         }
 
+        [Test, Performance]
+        public void Stack_Iterate_bool([Values(1, 100, 10000)] int n)
+        {
+            var s = new Stack(); bool[] src = Src.Bools(n);
+            for (int i = 0; i < n; i++) s.Push(src[i]);
+            long sink = 0;
+            Bench.MeasureTimeAndGc(
+                action: () => { foreach (object o in s) if ((bool)o) sink++; },
+                setup: null, cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); }, n: n);
+        }
+
         // ====================================================================
         // SortedList (非泛型 System.Collections.SortedList):
         //   增(Add 顺序键) / 删(Remove k ×M) / 改(this[k]= ×M) /
@@ -821,6 +1048,15 @@ namespace CollectionBenchmarks
         public void SortedList_Add_ref([Values(1, 100, 10000)] int n)
         {
             RefElem[] src = Src.Refs(n);
+            Bench.MeasureTimeAndGcProducing(
+                produce: () => { var sl = new SortedList(); for (int i = 0; i < n; i++) sl.Add(i, src[i]); return sl; },
+                n: n);
+        }
+
+        [Test, Performance]
+        public void SortedList_Add_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
             Bench.MeasureTimeAndGcProducing(
                 produce: () => { var sl = new SortedList(); for (int i = 0; i < n; i++) sl.Add(i, src[i]); return sl; },
                 n: n);
@@ -861,6 +1097,14 @@ namespace CollectionBenchmarks
             SortedList_Remove_Core(n, t);
         }
 
+        [Test, Performance]
+        public void SortedList_Remove_bool([Values(1, 100, 10000)] int n)
+        {
+            var t = new SortedList(); bool[] src = Src.Bools(n);
+            for (int i = 0; i < n; i++) t.Add(i, src[i]);
+            SortedList_Remove_Core(n, t);
+        }
+
         // ---- 改: this[intKey] = v2 ×M (overwrite existing) ----
         [Test, Performance]
         public void SortedList_Set_int([Values(1, 100, 10000)] int n)
@@ -888,6 +1132,17 @@ namespace CollectionBenchmarks
         public void SortedList_Set_ref([Values(1, 100, 10000)] int n)
         {
             RefElem[] src = Src.Refs(n);
+            int m = Bench.SubOpCount(n);
+            var sl = new SortedList(); for (int i = 0; i < n; i++) sl.Add(i, src[i]);
+            Bench.MeasureTimeAndGc(
+                action: () => { for (int i = 0; i < m; i++) sl[i % n] = src[(i + 1) % n]; },
+                setup: null, cleanup: null, n: n);
+        }
+
+        [Test, Performance]
+        public void SortedList_Set_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
             int m = Bench.SubOpCount(n);
             var sl = new SortedList(); for (int i = 0; i < n; i++) sl.Add(i, src[i]);
             Bench.MeasureTimeAndGc(
@@ -932,6 +1187,18 @@ namespace CollectionBenchmarks
                 setup: null, cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); }, n: n);
         }
 
+        [Test, Performance]
+        public void SortedList_ContainsKey_bool([Values(1, 100, 10000)] int n)
+        {
+            bool[] src = Src.Bools(n);
+            int m = Bench.SubOpCount(n);
+            var sl = new SortedList(); for (int i = 0; i < n; i++) sl.Add(i, src[i]);
+            int sink = 0;
+            Bench.MeasureTimeAndGc(
+                action: () => { for (int i = 0; i < m; i++) if (sl.ContainsKey(i % n)) sink++; },
+                setup: null, cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); }, n: n);
+        }
+
         // ---- 遍历: foreach DictionaryEntry full ----
         [Test, Performance]
         public void SortedList_Iterate_int([Values(1, 100, 10000)] int n)
@@ -963,6 +1230,17 @@ namespace CollectionBenchmarks
             long sink = 0;
             Bench.MeasureTimeAndGc(
                 action: () => { foreach (DictionaryEntry e in sl) sink += ((RefElem)e.Value).A; },
+                setup: null, cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); }, n: n);
+        }
+
+        [Test, Performance]
+        public void SortedList_Iterate_bool([Values(1, 100, 10000)] int n)
+        {
+            var sl = new SortedList(); bool[] src = Src.Bools(n);
+            for (int i = 0; i < n; i++) sl.Add(i, src[i]);
+            long sink = 0;
+            Bench.MeasureTimeAndGc(
+                action: () => { foreach (DictionaryEntry e in sl) if ((bool)e.Value) sink++; },
                 setup: null, cleanup: () => { if (sink < 0) UnityEngine.Debug.Log(sink); }, n: n);
         }
 
