@@ -446,6 +446,10 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     --bg:#0f1115; --panel:#171a21; --panel2:#1d212b; --line:#2a2f3a;
     --txt:#e6e9ef; --muted:#9aa3b2; --accent:#5aa9ff; --accent2:#ffd166;
     --good:#2fbf71; --bad:#e5484d; --warn:#f5a524;
+    /* sticky offsets — measured at runtime by JS (see setStickyOffsets).
+       --head-h: rendered header height; --ctl-h: rendered control-bar height.
+       Fallbacks below keep things usable before/without JS. */
+    --head-h:120px; --ctl-h:54px;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--txt);
@@ -464,9 +468,14 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   main{padding:16px 18px 60px;max-width:1500px;margin:0 auto}
   .view{display:none}
   .view.active{display:block}
+  /* Control / filter bar (元素/N/Family/指标 selectors) stays pinned to the top
+     while scrolling. Sits just under the sticky <header> (top = header height).
+     Opaque background so table rows never bleed through. z-index below header
+     (20) but above the matrix thead (5). */
   .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;
     background:var(--panel);border:1px solid var(--line);border-radius:10px;
-    padding:12px 14px;margin-bottom:14px}
+    padding:12px 14px;margin-bottom:14px;
+    position:sticky;top:var(--head-h);z-index:15}
   .ctl{display:flex;align-items:center;gap:6px}
   .ctl label{color:var(--muted);font-size:12.5px}
   select{background:var(--panel2);color:var(--txt);border:1px solid var(--line);
@@ -480,9 +489,18 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   .matrix-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
   .matrix th,.matrix td{padding:6px 8px;text-align:center;border:1px solid var(--line);
     font-variant-numeric:tabular-nums;white-space:nowrap}
-  .matrix thead th{position:sticky;top:0;background:var(--panel2);z-index:5}
+  /* Heat-matrix column-header row (增/删/改/查/遍历 buckets) stays pinned just
+     below the (sticky) header + control bar, so the bucket labels never scroll
+     away while comparing collections / switching family dropdowns. Offset =
+     header height + control-bar height. Opaque bg + z-index above body cells. */
+  .matrix thead th{position:sticky;top:calc(var(--head-h) + var(--ctl-h));
+    background:var(--panel2);z-index:6}
+  /* First column (collection name) sticks to the left for horizontal reading. */
   .matrix .rowhead{position:sticky;left:0;background:var(--panel2);text-align:left;
     z-index:4;font-weight:600}
+  /* The top-left corner cell is BOTH a thead th and the rowhead — it must win
+     over both the sticky column and the sticky header row, so bump it highest. */
+  .matrix thead th.rowhead{z-index:7}
   .famrow td{background:#10131a;color:var(--accent);text-align:left;font-weight:700;
     letter-spacing:.5px;position:sticky;left:0}
   .cell{cursor:pointer;color:#0c0f14;font-weight:600;border-radius:0}
@@ -662,6 +680,7 @@ document.querySelectorAll(".tab").forEach(t=>{
     document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
     t.classList.add("active");
     elGet("view-"+t.dataset.view).classList.add("active");
+    setStickyOffsets();   // active view changed -> re-measure its control bar
   };
 });
 
@@ -673,6 +692,20 @@ function showTip(html,x,y){ tip.innerHTML=html; tip.style.display="block";
   if(nx+w>innerWidth) nx=x-w-14; if(ny+h>innerHeight) ny=y-h-14;
   tip.style.left=nx+"px"; tip.style.top=ny+"px"; }
 function hideTip(){ tip.style.display="none"; }
+
+// ---------- sticky offsets ----------
+// The header and the per-view control bar are both position:sticky. The matrix
+// thead pins below BOTH, so we measure their live rendered heights and feed them
+// into CSS vars (--head-h / --ctl-h). Pure-CSS can't know these (header height
+// varies with wrapped tabs/meta), so this tiny measurer keeps the offsets exact.
+function setStickyOffsets(){
+  const head=document.querySelector("header");
+  if(head) document.documentElement.style.setProperty("--head-h", head.offsetHeight+"px");
+  // measure the control bar of the currently-active view (heights differ slightly)
+  const ctl=document.querySelector(".view.active .controls");
+  if(ctl) document.documentElement.style.setProperty("--ctl-h", ctl.offsetHeight+"px");
+}
+window.addEventListener("resize", setStickyOffsets);
 
 // =================================================================
 //  A. HEAT MATRIX
@@ -875,6 +908,9 @@ elGet("profColl").value=PROF.coll;
 elGet("profColl").onchange=e=>{PROF.coll=e.target.value;renderProf();};
 buildSeg(elGet("profMetric"), [{val:"time",label:"time"},{val:"gc",label:"GC"}], PROF.metric, v=>{PROF.metric=v;renderProf();});
 renderProf();
+
+// initial sticky-offset measure (after all views have rendered).
+setStickyOffsets();
 </script>
 </body>
 </html>

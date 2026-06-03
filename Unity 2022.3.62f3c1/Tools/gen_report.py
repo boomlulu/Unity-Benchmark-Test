@@ -35,6 +35,21 @@ COMPLEXITY = os.path.join(HERE, "complexity.json")
 TIME_GROUP = "Time"
 GC_GROUP = "GC Allocated"
 
+# Display-layer element-label normalization.
+# The C# test method names themselves still use "val"/"ref" internally (the
+# benchmarks are NOT re-run, so the method tokens stay as-is). Historically the
+# 5 managed families (Generic/Legacy/Concurrent/ObjectModel/Immutable) tagged the
+# value-type element as "val" while Native tagged the same value-type as "struct",
+# so filtering by "struct" only surfaced Native. We unify the PRESENTATION layer
+# here: val -> struct, ref -> class (int/bool/struct passed through unchanged).
+# Applied at row-build time so BOTH the CSV and the md emit the normalized label.
+ELEM_NORMALIZE = {"val": "struct", "ref": "class"}
+
+
+def normalize_elem(elem):
+    """Map parsed element label to its display form (val->struct, ref->class)."""
+    return ELEM_NORMALIZE.get(elem, elem)
+
 # SampleUnit enum -> multiplier to milliseconds (JsonUtility serializes enum as int).
 UNIT_INT_TO_MS = {0: 1e-6, 1: 1e-3, 2: 1.0, 3: 1000.0}  # ns, us, ms, s
 UNIT_STR_TO_MS = {"Nanosecond": 1e-6, "Microsecond": 1e-3, "Millisecond": 1.0, "Second": 1000.0,
@@ -158,11 +173,16 @@ def extract_rows(run_json, complexity):
             note.append("builder")
         notes = " ".join(note)
 
+        # Normalize the element label for display (val->struct, ref->class).
+        # Note logic above still uses the raw `elem` (e.g. boxing only on "int"),
+        # so keep this mapping AFTER the note computation.
+        elem_disp = normalize_elem(elem)
+
         rows.append({
             "family": family,
             "collection": coll,
             "op": op,
-            "elem": elem,
+            "elem": elem_disp,
             "n": n if n is not None else "",
             "time_ms": time_ms,
             "gc_bytes": gc_bytes,
